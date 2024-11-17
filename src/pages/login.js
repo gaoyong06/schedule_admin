@@ -1,6 +1,5 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
-import AppLayout from "../components/Layout";
 
 export default function Login() {
   const onFinish = (values) => {
@@ -8,7 +7,7 @@ export default function Login() {
   };
 
   return (
-    <AppLayout>
+    <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
       <h1>Login</h1>
       <Form
         name="normal_login"
@@ -16,11 +15,17 @@ export default function Login() {
         initialValues={{ remember: true }}
         onFinish={onFinish}
       >
-        <Form.Item>
-          <Input name="username" placeholder="Username" />
+        <Form.Item
+          name="username"
+          rules={[{ required: true, message: "Please input your Username!" }]}
+        >
+          <Input placeholder="Username" />
         </Form.Item>
-        <Form.Item>
-          <Input name="password" type="password" placeholder="Password" />
+        <Form.Item
+          name="password"
+          rules={[{ required: true, message: "Please input your Password!" }]}
+        >
+          <Input type="password" placeholder="Password" />
         </Form.Item>
         <Form.Item>
           <Button
@@ -33,6 +38,6 @@ export default function Login() {
           Or <a href="">register now!</a>
         </Form.Item>
       </Form>
-    </AppLayout>
+    </div>
   );
 }
