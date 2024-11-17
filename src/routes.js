@@ -12,6 +12,8 @@ import SubjectSetting from "./pages/SubjectSetting";
 import TeacherSetting from "./pages/TeacherSetting";
 import GradeClassSetting from "./pages/GradeClassSetting";
 import FacilitySetting from "./pages/FacilitySetting";
+import TeachingTaskSetting from "./pages/TeachingTaskSetting";
+
 
 
 const userService = new UserService();

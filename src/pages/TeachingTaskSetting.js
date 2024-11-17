@@ -17,6 +17,19 @@ const { Option } = Select;
 const TeachingTaskSetting = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const [dataSource, setDataSource] = useState([
+    {
+      key: "1",
+      grade: "七年级",
+      class: "七年级(1)班",
+      subject: "语文",
+      teacher: "张三",
+      weekType: "单周",
+      matchGroup: "体育",
+      headTeacher: "王五",
+    },
+    // 其他数据...
+  ]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -27,6 +40,11 @@ const TeachingTaskSetting = () => {
       .validateFields()
       .then((values) => {
         // 处理表单提交逻辑
+        const newData = {
+          key: dataSource.length + 1,
+          ...values,
+        };
+        setDataSource([...dataSource, newData]);
         message.success("添加成功");
         setIsModalVisible(false);
       })
@@ -61,6 +79,21 @@ const TeachingTaskSetting = () => {
       key: "teacher",
     },
     {
+      title: "单双周",
+      dataIndex: "weekType",
+      key: "weekType",
+    },
+    {
+      title: "匹配组",
+      dataIndex: "matchGroup",
+      key: "matchGroup",
+    },
+    {
+      title: "班主任",
+      dataIndex: "headTeacher",
+      key: "headTeacher",
+    },
+    {
       title: "操作",
       key: "action",
       render: (text, record) => (
@@ -71,23 +104,12 @@ const TeachingTaskSetting = () => {
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-      grade: "七年级",
-      class: "七年级(1)班",
-      subject: "语文",
-      teacher: "张三",
-    },
-    // 其他数据...
-  ];
-
   return (
-    <div className="course-plan-setting">
+    <div className="teaching-task-setting">
       <Button type="primary" onClick={showModal}>
         新增
       </Button>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={dataSource} />
       <Modal
         title="课程计划设置"
         visible={isModalVisible}
