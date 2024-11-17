@@ -1,0 +1,67 @@
+Date : 2024-11-17 11:35:24
+Directory : /Users/gaoyong/Documents/work/schedule_admin
+Total : 31 files,  18564 codes, 57 comments, 135 blanks, all 18756 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JSON       |          3 |     17,503 |          0 |          3 |     17,506 |
+| JavaScript |         18 |        874 |         29 |         71 |        974 |
+| CSS        |          7 |        124 |          5 |         27 |        156 |
+| Markdown   |          1 |         42 |          0 |         33 |         75 |
+| HTML       |          1 |         20 |         23 |          1 |         44 |
+| XML        |          1 |          1 |          0 |          0 |          1 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                          | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                             |         31 |     18,564 |         57 |        135 |     18,756 |
+| . (Files)                                                                     |          3 |     17,520 |          0 |         35 |     17,555 |
+| public                                                                        |          2 |         45 |         23 |          2 |         70 |
+| src                                                                           |         26 |        999 |         34 |         98 |      1,131 |
+| src (Files)                                                                   |          9 |        126 |          7 |         22 |        155 |
+| src/components                                                                |          2 |         77 |          0 |          5 |         82 |
+| src/pages                                                                     |         13 |        759 |         27 |         59 |        845 |
+| src/services                                                                  |          2 |         37 |          0 |         12 |         49 |
++-------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                      | language   | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| /Users/gaoyong/Documents/work/schedule_admin/README.md                        | Markdown   |         42 |          0 |         33 |         75 |
+| /Users/gaoyong/Documents/work/schedule_admin/package-lock.json                | JSON       |     17,436 |          0 |          1 |     17,437 |
+| /Users/gaoyong/Documents/work/schedule_admin/package.json                     | JSON       |         42 |          0 |          1 |         43 |
+| /Users/gaoyong/Documents/work/schedule_admin/public/index.html                | HTML       |         20 |         23 |          1 |         44 |
+| /Users/gaoyong/Documents/work/schedule_admin/public/manifest.json             | JSON       |         25 |          0 |          1 |         26 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/App.css                      | CSS        |         33 |          0 |          6 |         39 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/App.js                       | JavaScript |         20 |          0 |          2 |         22 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/App.test.js                  | JavaScript |          7 |          0 |          2 |          9 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/components/Header.js         | JavaScript |         24 |          0 |          3 |         27 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/components/Layout.js         | JavaScript |         53 |          0 |          2 |         55 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/index.css                    | CSS        |         12 |          0 |          2 |         14 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/index.js                     | JavaScript |         12 |          3 |          3 |         18 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/logo.svg                     | XML        |          1 |          0 |          0 |          1 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/CreateSchedule.css     | CSS        |         17 |          1 |          3 |         21 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/CreateSchedule.js      | JavaScript |        120 |          3 |          7 |        130 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/EditSchedule.css       | CSS        |         13 |          1 |          3 |         17 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/EditSchedule.js        | JavaScript |        208 |          5 |         10 |        223 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/LessonTimeSettings.css | CSS        |         13 |          1 |          3 |         17 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/LessonTimeSettings.js  | JavaScript |         73 |          4 |          5 |         82 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/Login.js               | JavaScript |         41 |          0 |          2 |         43 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/PublicTimeSettings.css | CSS        |         13 |          1 |          4 |         18 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/PublicTimeSettings.js  | JavaScript |         73 |          4 |          5 |         82 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/Register.js            | JavaScript |         40 |          0 |          2 |         42 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/ScheduleList.css       | CSS        |         23 |          1 |          6 |         30 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/ScheduleList.js        | JavaScript |         97 |          6 |          8 |        111 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/pages/ScheduleManagement.js  | JavaScript |         28 |          0 |          1 |         29 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/reportWebVitals.js           | JavaScript |         12 |          0 |          2 |         14 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/routes.js                    | JavaScript |         28 |          0 |          4 |         32 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/services/schedule_service.js | JavaScript |         17 |          0 |          6 |         23 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/services/user_service.js     | JavaScript |         20 |          0 |          6 |         26 |
+| /Users/gaoyong/Documents/work/schedule_admin/src/setupTests.js                | JavaScript |          1 |          4 |          1 |          6 |
+| Total                                                                         |            |     18,564 |         57 |        135 |     18,756 |
++-------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
