@@ -1,12 +1,14 @@
 import React from "react";
-import { Form, Input, Button, Checkbox } from "antd";
-import { UserOutlined } from "@ant-design/pro-layout";
-
-const { Content } = UserOutlined;
+import { Form, Input, Button } from "antd";
+import AppLayout from "../components/Layout";
 
 export default function Register() {
+  const onFinish = (values) => {
+    console.log("Received values of form: ", values);
+  };
+
   return (
-    <Content>
+    <AppLayout>
       <h1>Register</h1>
       <Form
         name="register"
@@ -30,10 +32,6 @@ export default function Register() {
           </Button>
         </Form.Item>
       </Form>
-    </Content>
+    </AppLayout>
   );
 }
-
-const onFinish = (values) => {
-  console.log("Received values of form: ", values);
-};

@@ -1,12 +1,14 @@
 import React from "react";
-import { Form, Input, Button, Checkbox } from "antd";
-import { UserOutlined } from "@ant-design/pro-layout";
-
-const { Content } = UserOutlined;
+import { Form, Input, Button } from "antd";
+import AppLayout from "../components/Layout";
 
 export default function Login() {
+  const onFinish = (values) => {
+    console.log("Received values of form: ", values);
+  };
+
   return (
-    <Content>
+    <AppLayout>
       <h1>Login</h1>
       <Form
         name="normal_login"
@@ -31,10 +33,6 @@ export default function Login() {
           Or <a href="">register now!</a>
         </Form.Item>
       </Form>
-    </Content>
+    </AppLayout>
   );
 }
-
-const onFinish = (values) => {
-  console.log("Received values of form: ", values);
-};

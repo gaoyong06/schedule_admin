@@ -1,12 +1,10 @@
-import React from "react";
-import { Form, Input, Button, Select, DatePicker } from "antd";
-import { UserOutlined } from "@ant-design/pro-layout";
-
-const { Content } = UserOutlined;
+import React from 'react';
+import { Form, Input, Button, DatePicker } from 'antd';
+import AppLayout from '../components/Layout';
 
 export default function ScheduleManagement() {
   return (
-    <Content>
+    <AppLayout>
       <h1>Schedule Management</h1>
       <Form layout="vertical">
         <Form.Item label="课程名称">
@@ -27,6 +25,6 @@ export default function ScheduleManagement() {
           </Button>
         </Form.Item>
       </Form>
-    </Content>
+    </AppLayout>
   );
 }
