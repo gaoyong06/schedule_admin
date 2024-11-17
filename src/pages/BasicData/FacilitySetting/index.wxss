@@ -1,0 +1,9 @@
+.facility-setting {
+  padding: 20px;
+}
+.facility-setting .ant-btn {
+  margin-bottom: 20px;
+}
+.facility-setting .ant-table {
+  margin-top: 20px;
+}

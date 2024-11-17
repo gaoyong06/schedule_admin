@@ -1,0 +1,13 @@
+/lambda/
+/scripts
+/config
+.history
+public
+dist
+.umi
+mock
+
+
+# TODO:后面要去掉
+src/
+types/

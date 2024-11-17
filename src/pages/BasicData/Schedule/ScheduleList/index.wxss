@@ -1,0 +1,10 @@
+.schedule-list-container {
+  padding: 20px;
+}
+.schedule-list-container .ant-btn {
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+.schedule-list-container .ant-table {
+  margin-top: 20px;
+}
