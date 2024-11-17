@@ -13,8 +13,12 @@ import TeacherSetting from "./pages/TeacherSetting";
 import GradeClassSetting from "./pages/GradeClassSetting";
 import FacilitySetting from "./pages/FacilitySetting";
 import TeachingTaskSetting from "./pages/TeachingTaskSetting";
-
-
+import ClassRule from "./pages/ClassRule";
+import TeacherRule from "./pages/TeacherRule";
+import SubjectRule from "./pages/SubjectRule";
+import TeacherSpecialRule from "./pages/TeacherSpecialRule";
+import SubjectSpecialRule from "./pages/SubjectSpecialRule";
+import CourseSchedule from "./pages/CourseSchedule";
 
 const userService = new UserService();
 const scheduleService = new ScheduleService();
@@ -33,6 +37,13 @@ function App() {
         <Route path="/teacher-setting" component={TeacherSetting} />
         <Route path="/grade-class-setting" component={GradeClassSetting} />
         <Route path="/facility-setting" component={FacilitySetting} />
+        <Route path="/teaching-task-setting" component={TeachingTaskSetting} />
+        <Route path="/class-rule" component={ClassRule} />
+        <Route path="/teacher-rule" component={TeacherRule} />
+        <Route path="/subject-rule" component={SubjectRule} />
+        <Route path="/teacher-special-rule" component={TeacherSpecialRule} />
+        <Route path="/subject-special-rule" component={SubjectSpecialRule} />
+        <Route path="/course-schedule" component={CourseSchedule} />
 
         {/* Add more routes here */}
       </Switch>

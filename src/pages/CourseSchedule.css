@@ -1,0 +1,17 @@
+.course-schedule {
+  display: flex;
+  padding: 20px;
+}
+
+.course-schedule-left {
+  width: 300px;
+  margin-right: 20px;
+}
+
+.course-schedule-right {
+  flex: 1;
+}
+
+.scheduling-result {
+  margin-top: 20px;
+}
