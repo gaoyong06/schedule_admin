@@ -8,6 +8,10 @@ import ScheduleService from "./services/scheduleService";
 import CreateSchedule from "./pages/CreateSchedule";
 import ScheduleList from "./pages/ScheduleList";
 import EditSchedule from "./pages/EditSchedule";
+import SubjectSetting from "./pages/SubjectSetting";
+import TeacherSetting from "./pages/TeacherSetting";
+import GradeClassSetting from "./pages/GradeClassSetting";
+import FacilitySetting from "./pages/FacilitySetting";
 
 
 const userService = new UserService();
@@ -23,6 +27,11 @@ function App() {
         <Route path="/create-schedule" component={CreateSchedule} />
         <Route path="/schedule-list" component={ScheduleList} />
         <Route path="/schedule/edit/:id" component={EditSchedule} />
+        <Route path="/subject-setting" component={SubjectSetting} />
+        <Route path="/teacher-setting" component={TeacherSetting} />
+        <Route path="/grade-class-setting" component={GradeClassSetting} />
+        <Route path="/facility-setting" component={FacilitySetting} />
+
         {/* Add more routes here */}
       </Switch>
     </Router>
