@@ -14,9 +14,9 @@ npm uninstall @types/react antd npm install @types/react antd
 
 nvm use 18
 
-#### package.json
+#### .eslintignore
 
-"husky": { "hooks": { "pre-commit": "" } }
+后面要去掉下面这两行 src/ types/
 
 # Ant Design Pro
 

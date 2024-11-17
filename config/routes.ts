@@ -69,6 +69,10 @@ export default [
     icon: 'smile',
     routes: [
       {
+        path: '/basic-data',
+        redirect: '/basic-data/edit-schedule',
+      },
+      {
         name: 'edit-schedule',
         path: '/basic-data/edit-schedule',
         component: './BasicData/Schedule/EditSchedule',
