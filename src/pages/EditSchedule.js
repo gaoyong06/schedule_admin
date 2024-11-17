@@ -23,6 +23,8 @@ const EditSchedule = () => {
   const [displayMode, setDisplayMode] = useState("weeklyHorizontal"); // 默认为周期横排
   const [isPublicTimeModalVisible, setIsPublicTimeModalVisible] =
     useState(false);
+  const [isLessonTimeModalVisible, setIsLessonTimeModalVisible] =
+    useState(false);
 
   useEffect(() => {
     // 模拟从服务器获取数据
@@ -76,6 +78,20 @@ const EditSchedule = () => {
 
   const handlePublicTimeCancel = () => {
     setIsPublicTimeModalVisible(false);
+  };
+
+  const showLessonTimeModal = () => {
+    setIsLessonTimeModalVisible(true);
+  };
+
+  const handleLessonTimeOk = () => {
+    // 处理节次时间设置的保存逻辑
+    setIsLessonTimeModalVisible(false);
+    message.success("节次时间设置保存成功");
+  };
+
+  const handleLessonTimeCancel = () => {
+    setIsLessonTimeModalVisible(false);
   };
 
   const columns = [
@@ -231,10 +247,7 @@ const EditSchedule = () => {
         <Button type="link" onClick={showPublicTimeModal}>
           公共时段设置
         </Button>
-        <Button
-          type="link"
-          onClick={() => history.push("/lesson-time-settings")}
-        >
+        <Button type="link" onClick={showLessonTimeModal}>
           节次时间设置
         </Button>
       </div>
@@ -251,6 +264,45 @@ const EditSchedule = () => {
             rules={[{ required: true, message: "请输入时段名称" }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            label="开始时间"
+            name="startTime"
+            rules={[{ required: true, message: "请输入开始时间" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="结束时间"
+            name="endTime"
+            rules={[{ required: true, message: "请输入结束时间" }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title="节次时间设置"
+        visible={isLessonTimeModalVisible}
+        onOk={handleLessonTimeOk}
+        onCancel={handleLessonTimeCancel}
+      >
+        <Form layout="vertical">
+          <Form.Item
+            label="节次名称"
+            name="lessonName"
+            rules={[{ required: true, message: "请输入节次名称" }]}
+          >
+            <Select>
+              <Option value="上午第1节">上午第1节</Option>
+              <Option value="上午第2节">上午第2节</Option>
+              <Option value="上午第3节">上午第3节</Option>
+              <Option value="上午第4节">上午第4节</Option>
+              <Option value="下午第1节">下午第1节</Option>
+              <Option value="下午第2节">下午第2节</Option>
+              <Option value="下午第3节">下午第3节</Option>
+              <Option value="下午第4节">下午第4节</Option>
+            </Select>
           </Form.Item>
           <Form.Item
             label="开始时间"
