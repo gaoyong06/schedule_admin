@@ -8,11 +8,13 @@ import {
   Input,
   Select,
   Checkbox,
+  Tabs,
   message,
 } from "antd";
 import "./TeachingTaskSetting.css";
 
 const { Option } = Select;
+const { TabPane } = Tabs;
 
 const TeachingTaskSetting = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -20,16 +22,17 @@ const TeachingTaskSetting = () => {
   const [dataSource, setDataSource] = useState([
     {
       key: "1",
-      grade: "七年级",
-      class: "七年级(1)班",
       subject: "语文",
+      class: "七年级(1)班",
       teacher: "张三",
-      weekType: "单周",
-      matchGroup: "体育",
-      headTeacher: "王五",
+      location: "教室1",
     },
     // 其他数据...
   ]);
+
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [teachers, setTeachers] = useState([]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -57,11 +60,27 @@ const TeachingTaskSetting = () => {
     setIsModalVisible(false);
   };
 
+  const handleSubjectChange = (value) => {
+    setSelectedSubject(value);
+    setSelectedClass(null);
+    setTeachers([]);
+  };
+
+  const handleClassChange = (value) => {
+    setSelectedClass(value);
+    // 根据选择的班级设置任课教师
+    if (value === "七年级(1)班") {
+      setTeachers(["张三", "李四", "王五"]);
+    } else {
+      setTeachers([]);
+    }
+  };
+
   const columns = [
     {
-      title: "年级",
-      dataIndex: "grade",
-      key: "grade",
+      title: "科目",
+      dataIndex: "subject",
+      key: "subject",
     },
     {
       title: "班级",
@@ -69,29 +88,14 @@ const TeachingTaskSetting = () => {
       key: "class",
     },
     {
-      title: "科目",
-      dataIndex: "subject",
-      key: "subject",
-    },
-    {
       title: "教师",
       dataIndex: "teacher",
       key: "teacher",
     },
     {
-      title: "单双周",
-      dataIndex: "weekType",
-      key: "weekType",
-    },
-    {
-      title: "匹配组",
-      dataIndex: "matchGroup",
-      key: "matchGroup",
-    },
-    {
-      title: "班主任",
-      dataIndex: "headTeacher",
-      key: "headTeacher",
+      title: "教学场地",
+      dataIndex: "location",
+      key: "location",
     },
     {
       title: "操作",
@@ -105,94 +109,74 @@ const TeachingTaskSetting = () => {
   ];
 
   return (
-    <div className="teaching-task-setting">
+    <div className="teaching-location-setting">
       <Button type="primary" onClick={showModal}>
         新增
       </Button>
       <Table columns={columns} dataSource={dataSource} />
       <Modal
-        title="课程计划设置"
+        title="教学场地设置"
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
+        width={800}
       >
         <Form form={form} layout="vertical">
-          <Form.Item
-            name="grade"
-            label="年级"
-            rules={[{ required: true, message: "请选择年级" }]}
-          >
-            <Select placeholder="请选择年级">
-              <Option value="七年级">七年级</Option>
-              <Option value="八年级">八年级</Option>
-              {/* 其他选项... */}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="class"
-            label="班级"
-            rules={[{ required: true, message: "请选择班级" }]}
-          >
-            <Select placeholder="请选择班级">
-              <Option value="七年级(1)班">七年级(1)班</Option>
-              <Option value="七年级(2)班">七年级(2)班</Option>
-              {/* 其他选项... */}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="subject"
-            label="科目"
-            rules={[{ required: true, message: "请选择科目" }]}
-          >
-            <Select placeholder="请选择科目">
-              <Option value="语文">语文</Option>
-              <Option value="数学">数学</Option>
-              {/* 其他选项... */}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="teacher"
-            label="教师"
-            rules={[{ required: true, message: "请选择教师" }]}
-          >
-            <Select placeholder="请选择教师">
-              <Option value="张三">张三</Option>
-              <Option value="李四">李四</Option>
-              {/* 其他选项... */}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="weekType"
-            label="单双周"
-            rules={[{ required: true, message: "请选择单双周" }]}
-          >
-            <Select placeholder="请选择单双周">
-              <Option value="单周">单周</Option>
-              <Option value="双周">双周</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="matchGroup"
-            label="匹配组"
-            rules={[{ required: true, message: "请选择匹配组" }]}
-          >
-            <Select placeholder="请选择匹配组">
-              <Option value="体育">体育</Option>
-              <Option value="活动">活动</Option>
-              {/* 其他选项... */}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="headTeacher"
-            label="班主任"
-            rules={[{ required: true, message: "请选择班主任" }]}
-          >
-            <Select placeholder="请选择班主任">
-              <Option value="王五">王五</Option>
-              <Option value="赵六">赵六</Option>
-              {/* 其他选项... */}
-            </Select>
-          </Form.Item>
+          <Tabs defaultActiveKey="1">
+            <TabPane tab="七年级" key="1">
+              <Form.Item
+                name="subject"
+                label="科目"
+                rules={[{ required: true, message: "请选择科目" }]}
+              >
+                <Select placeholder="请选择科目" onChange={handleSubjectChange}>
+                  <Option value="语文">语文</Option>
+                  <Option value="数学">数学</Option>
+                  {/* 其他选项... */}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="class"
+                label="班级"
+                rules={[{ required: true, message: "请选择班级" }]}
+              >
+                <Select
+                  placeholder="请选择班级"
+                  onChange={handleClassChange}
+                  disabled={!selectedSubject}
+                >
+                  <Option value="七年级(1)班">七年级(1)班</Option>
+                  <Option value="七年级(2)班">七年级(2)班</Option>
+                  {/* 其他选项... */}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="teacher"
+                label="教师"
+                rules={[{ required: true, message: "请选择教师" }]}
+              >
+                <Select placeholder="请选择教师" disabled={!selectedClass}>
+                  {teachers.map((teacher) => (
+                    <Option key={teacher} value={teacher}>
+                      {teacher}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="location"
+                label="教学场地"
+                rules={[{ required: true, message: "请选择教学场地" }]}
+              >
+                <Select placeholder="请选择教学场地">
+                  <Option value="教室1">教室1</Option>
+                  <Option value="教室2">教室2</Option>
+                  {/* 其他选项... */}
+                </Select>
+              </Form.Item>
+            </TabPane>
+            {/* 其他年级的选项卡... */}
+          </Tabs>
         </Form>
       </Modal>
     </div>
