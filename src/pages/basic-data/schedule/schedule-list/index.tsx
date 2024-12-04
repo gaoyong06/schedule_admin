@@ -1,120 +1,258 @@
-import { Button, Modal, Table, message } from 'antd';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './index.less';
-
-// 定义数据源的结构
-interface Schedule {
-  key: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-  creator: string;
-  status: string;
-}
-
-const ScheduleList = () => {
-  const [dataSource, setDataSource] = useState<Schedule[]>([]); // 明确类型
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // 模拟从服务器获取数据
-    setDataSource([
-      {
-        key: '1',
-        name: '2022-2023学年第一学期课表',
-        createdAt: '2022-08-04 14:27:04',
-        updatedAt: '2022-08-04 14:27:04',
-        creator: 'xughost',
-        status: '审核中',
-      },
-      // 可以添加更多模拟数据
-    ]);
-  }, []);
-
-  const handleOpen = (record: Schedule) => {
-    // 处理打开课表方案的逻辑
-    navigate(`/schedule/edit/${record.key}`);
-  };
-
-  const handleSaveAs = (record: Schedule) => {
-    // 处理另存课表方案的逻辑
-    message.success('另存成功');
-  };
-
-  const handleDelete = (record: Schedule) => {
-    Modal.confirm({
-      title: '确认删除',
-      content: '确认要删除这个课表方案吗？',
-      onOk() {
-        // 处理删除课表方案的逻辑
-        setDataSource(dataSource.filter((item) => item.key !== record.key));
-        message.success('删除成功');
-      },
-    });
-  };
-
-  const columns = [
-    {
-      title: '序号',
-      dataIndex: 'key',
-      key: 'key',
-    },
-    {
-      title: '方案名称',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-    },
-    {
-      title: '最后编辑时间',
-      dataIndex: 'updatedAt',
-      key: 'updatedAt',
-    },
-    {
-      title: '创建人',
-      dataIndex: 'creator',
-      key: 'creator',
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-    },
-    {
-      title: '操作',
-      key: 'action',
-      render: (text: any, record: Schedule) => (
-        <>
-          <Button type="link" onClick={() => handleOpen(record)}>
-            打开
-          </Button>
-          <Button type="link" onClick={() => handleSaveAs(record)}>
-            另存
-          </Button>
-          <Button type="link" onClick={() => handleDelete(record)}>
-            删除
-          </Button>
-        </>
-      ),
-    },
-  ];
-
+import { DownOutlined, PlusOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-components';
+import { useRequest } from '@umijs/max';
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Dropdown,
+  Input,
+  List,
+  Modal,
+  Progress,
+  Radio,
+  Row,
+} from 'antd';
+import dayjs from 'dayjs';
+import type { FC } from 'react';
+import React, { useState } from 'react';
+import OperationModal from './components/OperationModal';
+import type { BasicListItemDataType } from './data';
+import { addFakeList, queryFakeList, removeFakeList, updateFakeList } from './service';
+import useStyles from './style.style';
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
+const { Search } = Input;
+const Info: FC<{
+  title: React.ReactNode;
+  value: React.ReactNode;
+  bordered?: boolean;
+}> = ({ title, value, bordered }) => {
+  const { styles } = useStyles();
   return (
-    <div className="schedule-list-container">
-      <Button type="primary" onClick={() => navigate('/create-schedule')}>
-        新建课表方案
-      </Button>
-      <Button type="default" onClick={() => navigate('/schedule-history')}>
-        历史方案
-      </Button>
-      <Table dataSource={dataSource} columns={columns} rowKey="key" pagination={{ pageSize: 5 }} />
+    <div className={styles.headerInfo}>
+      <span>{title}</span>
+      <p>{value}</p>
+      {bordered && <em />}
     </div>
   );
 };
+const ListContent = ({
+  data: { owner, createdAt, percent, status },
+}: {
+  data: BasicListItemDataType;
+}) => {
+  const { styles } = useStyles();
+  return (
+    <div>
+      <div className={styles.listContentItem}>
+        <span>Owner</span>
+        <p>{owner}</p>
+      </div>
+      <div className={styles.listContentItem}>
+        <span>开始时间</span>
+        <p>{dayjs(createdAt).format('YYYY-MM-DD HH:mm')}</p>
+      </div>
+      <div className={styles.listContentItem}>
+        <Progress
+          percent={percent}
+          status={status}
+          strokeWidth={6}
+          style={{
+            width: 180,
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+export const BasicList: FC = () => {
+  const { styles } = useStyles();
+  const [done, setDone] = useState<boolean>(false);
+  const [open, setVisible] = useState<boolean>(false);
+  const [current, setCurrent] = useState<Partial<BasicListItemDataType> | undefined>(undefined);
+  const {
+    data: listData,
+    loading,
+    mutate,
+  } = useRequest(() => {
+    return queryFakeList({
+      count: 50,
+    });
+  });
+  const { run: postRun } = useRequest(
+    (method, params) => {
+      if (method === 'remove') {
+        return removeFakeList(params);
+      }
+      if (method === 'update') {
+        return updateFakeList(params);
+      }
+      return addFakeList(params);
+    },
+    {
+      manual: true,
+      onSuccess: (result) => {
+        mutate(result);
+      },
+    },
+  );
+  const list = listData?.list || [];
+  const paginationProps = {
+    showSizeChanger: true,
+    showQuickJumper: true,
+    pageSize: 5,
+    total: list.length,
+  };
+  const showEditModal = (item: BasicListItemDataType) => {
+    setVisible(true);
+    setCurrent(item);
+  };
+  const deleteItem = (id: string) => {
+    postRun('remove', {
+      id,
+    });
+  };
+  const editAndDelete = (key: string | number, currentItem: BasicListItemDataType) => {
+    if (key === 'edit') showEditModal(currentItem);
+    else if (key === 'delete') {
+      Modal.confirm({
+        title: '删除任务',
+        content: '确定删除该任务吗？',
+        okText: '确认',
+        cancelText: '取消',
+        onOk: () => deleteItem(currentItem.id),
+      });
+    }
+  };
+  const extraContent = (
+    <div>
+      <RadioGroup defaultValue="all">
+        <RadioButton value="all">全部</RadioButton>
+        <RadioButton value="progress">进行中</RadioButton>
+        <RadioButton value="waiting">等待中</RadioButton>
+      </RadioGroup>
+      <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
+    </div>
+  );
+  const MoreBtn: React.FC<{
+    item: BasicListItemDataType;
+  }> = ({ item }) => (
+    <Dropdown
+      menu={{
+        onClick: ({ key }) => editAndDelete(key, item),
+        items: [
+          {
+            key: 'edit',
+            label: '编辑',
+          },
+          {
+            key: 'delete',
+            label: '删除',
+          },
+        ],
+      }}
+    >
+      <a>
+        更多 <DownOutlined />
+      </a>
+    </Dropdown>
+  );
+  const handleDone = () => {
+    setDone(false);
+    setVisible(false);
+    setCurrent({});
+  };
+  const handleSubmit = (values: BasicListItemDataType) => {
+    setDone(true);
+    const method = values?.id ? 'update' : 'add';
+    postRun(method, values);
+  };
+  return (
+    <div>
+      <PageContainer>
+        <div className={styles.standardList}>
+          <Card bordered={false}>
+            <Row>
+              <Col sm={8} xs={24}>
+                <Info title="我的待办" value="8个任务" bordered />
+              </Col>
+              <Col sm={8} xs={24}>
+                <Info title="本周任务平均处理时间" value="32分钟" bordered />
+              </Col>
+              <Col sm={8} xs={24}>
+                <Info title="本周完成任务数" value="24个任务" />
+              </Col>
+            </Row>
+          </Card>
 
-export default ScheduleList;
+          <Card
+            className={styles.listCard}
+            bordered={false}
+            title="基本列表"
+            style={{
+              marginTop: 24,
+            }}
+            bodyStyle={{
+              padding: '0 32px 40px 32px',
+            }}
+            extra={extraContent}
+          >
+            <List
+              size="large"
+              rowKey="id"
+              loading={loading}
+              pagination={paginationProps}
+              dataSource={list}
+              renderItem={(item) => (
+                <List.Item
+                  actions={[
+                    <a
+                      key="edit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        showEditModal(item);
+                      }}
+                    >
+                      编辑
+                    </a>,
+                    <MoreBtn key="more" item={item} />,
+                  ]}
+                >
+                  <List.Item.Meta
+                    avatar={<Avatar src={item.logo} shape="square" size="large" />}
+                    title={<a href={item.href}>{item.title}</a>}
+                    description={item.subDescription}
+                  />
+                  <ListContent data={item} />
+                </List.Item>
+              )}
+            />
+          </Card>
+        </div>
+      </PageContainer>
+      <Button
+        type="dashed"
+        onClick={() => {
+          setVisible(true);
+        }}
+        style={{
+          width: '100%',
+          marginBottom: 8,
+        }}
+      >
+        <PlusOutlined />
+        添加
+      </Button>
+      <OperationModal
+        done={done}
+        open={open}
+        current={current}
+        onDone={handleDone}
+        onSubmit={handleSubmit}
+      />
+    </div>
+  );
+};
+export default BasicList;

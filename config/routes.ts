@@ -67,6 +67,11 @@ export default [
         redirect: '/basic-data/create-schedule',
       },
       {
+        name: 'schedule-list',
+        path: '/basic-data/schedule-list',
+        component: './basic-data/schedule/schedule-list',
+      },
+      {
         name: 'create-schedule',
         path: '/basic-data/create-schedule',
         component: './basic-data/schedule/create-schedule',
