@@ -18,7 +18,7 @@ export default [
       {
         name: 'login',
         path: '/user/login',
-        component: './User/Login',
+        component: './user/login',
       },
     ],
   },
@@ -46,12 +46,6 @@ export default [
     ],
   },
   {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
-  },
-  {
     path: '/',
     redirect: '/welcome',
   },
@@ -75,32 +69,32 @@ export default [
       {
         name: 'create-schedule',
         path: '/basic-data/create-schedule',
-        component: './BasicData/Schedule/CreateSchedule',
+        component: './basic-data/schedule/create-schedule',
       },
       {
         name: 'edit-schedule',
         path: '/basic-data/edit-schedule',
-        component: './BasicData/Schedule/EditSchedule',
+        component: './basic-data/schedule/edit-schedule',
       },
       {
         name: 'subject-setting',
         path: '/basic-data/subject-setting',
-        component: './BasicData/SubjectSetting',
+        component: './basic-data/subject-setting',
       },
       {
         name: 'teacher-setting',
         path: '/basic-data/teacher-setting',
-        component: './BasicData/TeacherSetting',
+        component: './basic-data/teacher-setting',
       },
       {
         name: 'grade-class-setting',
         path: '/basic-data/grade-class-setting',
-        component: './BasicData/GradeClassSetting',
+        component: './basic-data/grade-class-setting',
       },
       {
         name: 'facility-setting',
         path: '/basic-data/facility-setting',
-        component: './BasicData/FacilitySetting',
+        component: './basic-data/facility-setting',
       },
     ],
   },
@@ -114,7 +108,7 @@ export default [
       {
         name: 'setting',
         path: '/teaching-task/setting',
-        component: './TeachingTask/TeachingTaskSetting',
+        component: './teaching-task/teaching-task-setting',
       },
     ],
   },
@@ -128,27 +122,27 @@ export default [
       {
         name: 'class',
         path: '/rule/class',
-        component: './Rule/ClassRule',
+        component: './rule/class-rule',
       },
       {
         name: 'teacher',
         path: '/rule/teacher',
-        component: './Rule/TeacherRule',
+        component: './rule/teacher-rule',
       },
       {
         name: 'subject',
         path: '/rule/subject',
-        component: './Rule/SubjectRule',
+        component: './rule/subject-rule',
       },
       {
         name: 'teacher-special',
         path: '/rule/teacher-special',
-        component: './Rule/TeacherSpecialRule',
+        component: './rule/teacher-special-rule',
       },
       {
         name: 'subject-special',
         path: '/rule/subject-special',
-        component: './Rule/SubjectSpecialRule',
+        component: './rule/subject-special-rule',
       },
     ],
   },
@@ -158,6 +152,6 @@ export default [
     path: '/course-schedule',
     name: 'course-schedule',
     icon: 'smile',
-    component: './CourseSchedule',
+    component: './course-schedule',
   },
 ];
