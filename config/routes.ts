@@ -70,7 +70,12 @@ export default [
     routes: [
       {
         path: '/basic-data',
-        redirect: '/basic-data/edit-schedule',
+        redirect: '/basic-data/create-schedule',
+      },
+      {
+        name: 'create-schedule',
+        path: '/basic-data/create-schedule',
+        component: './BasicData/Schedule/CreateSchedule',
       },
       {
         name: 'edit-schedule',
