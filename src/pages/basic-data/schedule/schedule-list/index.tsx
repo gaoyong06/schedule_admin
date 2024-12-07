@@ -1,5 +1,5 @@
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { PageContainer } from '@ant-design/pro-components';
+import { FooterToolbar, PageContainer } from '@ant-design/pro-components';
 import { useRequest } from '@umijs/max';
 import {
   Avatar,
@@ -18,7 +18,7 @@ import dayjs from 'dayjs';
 import type { FC } from 'react';
 import React, { useState } from 'react';
 import OperationModal from './components/OperationModal';
-import type { BasicListItemDataType } from './data';
+import type { BasicListItemDataType } from './data.d';
 import { addFakeList, queryFakeList, removeFakeList, updateFakeList } from './service';
 import useStyles from './style.style';
 const RadioButton = Radio.Button;
@@ -232,19 +232,23 @@ export const BasicList: FC = () => {
           </Card>
         </div>
       </PageContainer>
-      <Button
-        type="dashed"
-        onClick={() => {
-          setVisible(true);
-        }}
-        style={{
-          width: '100%',
-          marginBottom: 8,
-        }}
-      >
-        <PlusOutlined />
-        添加
-      </Button>
+
+      <FooterToolbar>
+        <Button
+          type="dashed"
+          onClick={() => {
+            setVisible(true);
+          }}
+          style={{
+            width: '100%',
+            marginBottom: 8,
+          }}
+        >
+          <PlusOutlined />
+          添加
+        </Button>
+      </FooterToolbar>
+
       <OperationModal
         done={done}
         open={open}
