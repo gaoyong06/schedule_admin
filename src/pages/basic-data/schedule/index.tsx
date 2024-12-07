@@ -134,6 +134,7 @@ export const BasicList: FC = () => {
         type="primary"
         key="primary"
         onClick={() => {
+          setCurrent(undefined); // 重置current状态
           setVisible(true);
         }}
         style={{

@@ -52,11 +52,11 @@ export default {
 
   // =========== 自定义 ===============
   'menu.basic-data': '基础数据',
-  'menu.basic-data.schedule-list': '课表方案',
-  'menu.basic-data.subject-setting': '科目设置',
-  'menu.basic-data.teacher-setting': '教师设置',
-  'menu.basic-data.grade-class-setting': '年级/班级设置',
-  'menu.basic-data.facility-setting': '教学场地设置',
+  'menu.basic-data.schedule': '课表方案',
+  'menu.basic-data.subject': '科目设置',
+  'menu.basic-data.teacher': '教师设置',
+  'menu.basic-data.grade-class': '年级/班级设置',
+  'menu.basic-data.facility': '教学场地设置',
 
   'menu.teaching-task': '课务安排',
   'menu.teaching-task.setting': '课程计划设置',
