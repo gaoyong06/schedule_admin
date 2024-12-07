@@ -62,6 +62,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     waterMarkProps: {
       // content: initialState?.currentUser?.name,
     },
+
+    // TODO: 自定义 footer
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
@@ -107,6 +109,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       return (
         <>
           {children}
+          {/* TODO: 关掉 SettingDrawer 动态设置
+          https://pro.ant.design/zh-CN/docs/dynamic-theme */}
           {isDev && (
             <SettingDrawer
               disableUrlParams

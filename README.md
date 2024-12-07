@@ -18,6 +18,10 @@ nvm use 18
 
 后面要去掉下面这两行 src/ types/
 
+#### 权限处理
+
+https://v3.umijs.org/zh-CN/plugins/plugin-access
+
 # Ant Design Pro
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
