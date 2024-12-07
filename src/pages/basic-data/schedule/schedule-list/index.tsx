@@ -1,4 +1,4 @@
-import { DownOutlined, PlusOutlined } from '@ant-design/icons';
+import { createFromIconfontCN, DownOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { useRequest } from '@umijs/max';
 import { Avatar, Badge, Button, Card, Dropdown, Input, List, Modal, Radio } from 'antd';
@@ -9,6 +9,21 @@ import OperationModal from './components/OperationModal';
 import type { BasicListItemDataType } from './data.d';
 import { addFakeList, queryFakeList, removeFakeList, updateFakeList } from './service';
 import useStyles from './style.style';
+
+const IconFont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
+});
+
+const animalIcons = [
+  { icon: '🐰', color: '#ffd6e7' }, // 兔子
+  { icon: '🦊', color: '#ffe4cc' }, // 狐狸
+  { icon: '🐼', color: '#e8f4f8' }, // 熊猫
+  { icon: '🦁', color: '#fff4cc' }, // 狮子
+  { icon: '🐨', color: '#e6f3ff' }, // 考拉
+  { icon: '🦉', color: '#f4e3ff' }, // 猫头鹰
+  { icon: '🐱', color: '#ffe6e6' }, // 猫咪
+];
+
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 const { Search } = Input;
@@ -201,7 +216,37 @@ export const BasicList: FC = () => {
                   ]}
                 >
                   <List.Item.Meta
-                    avatar={<Avatar src={item.logo} shape="square" size="large" />}
+                    avatar={
+                      <Avatar
+                        shape="square"
+                        size={48}
+                        style={{
+                          backgroundColor:
+                            animalIcons[
+                              item.title
+                                .split('')
+                                .reduce((acc, char) => acc + char.charCodeAt(0), 0) %
+                                animalIcons.length
+                            ].color,
+                          fontSize: '28px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                          border: '2px solid #fff',
+                          fontFamily: '"Segoe UI Emoji", "Noto Color Emoji", sans-serif',
+                        }}
+                      >
+                        {
+                          animalIcons[
+                            item.title
+                              .split('')
+                              .reduce((acc, char) => acc + char.charCodeAt(0), 0) %
+                              animalIcons.length
+                          ].icon
+                        }
+                      </Avatar>
+                    }
                     title={<a href={item.href}>{item.title}</a>}
                     description={item.subDescription}
                   />
