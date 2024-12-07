@@ -1,51 +1,51 @@
-import {
-  PageContainer,
-  ProForm,
-  ProFormDateRangePicker,
-  ProFormDependency,
-  ProFormDigit,
-  ProFormRadio,
-  ProFormSelect,
-  ProFormText,
-  ProFormTextArea,
-} from '@ant-design/pro-components';
-import { useRequest } from '@umijs/max';
-import { Card, message } from 'antd';
+import { ModalForm, ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
+import { Button, Result } from 'antd';
 import type { FC } from 'react';
-import { fakeSubmitForm } from './service';
-import useStyles from './style.style';
-const CreateSchedule: FC<Record<string, any>> = () => {
+import type { BasicListItemDataType } from '../data';
+import useStyles from '../style.style';
+type OperationModalProps = {
+  done: boolean;
+  open: boolean;
+  current: Partial<BasicListItemDataType> | undefined;
+  onDone: () => void;
+  onSubmit: (values: BasicListItemDataType) => void;
+  children?: React.ReactNode;
+};
+const OperationModal: FC<OperationModalProps> = (props) => {
   const { styles } = useStyles();
-  const { run } = useRequest(fakeSubmitForm, {
-    manual: true,
-    onSuccess: () => {
-      message.success('提交成功');
-    },
-  });
-  const onFinish = async (values: Record<string, any>) => {
-    run(values);
-  };
+  const { done, open, current, onDone, onSubmit, children } = props;
+  if (!open) {
+    return null;
+  }
   return (
-    <PageContainer content="表单页用于向用户收集或验证信息，基础表单常见于数据项较少的表单场景。">
-      <Card bordered={false}>
-        <ProForm
-          hideRequiredMark
-          style={{
-            margin: 'auto',
-            marginTop: 8,
-            maxWidth: 600,
-          }}
-          name="basic"
-          layout="vertical"
-          initialValues={{
-            public: '1',
-          }}
-          onFinish={onFinish}
-        >
+    <ModalForm<BasicListItemDataType>
+      open={open}
+      title={done ? null : current ? '课表编辑' : '新建课表'}
+      className={styles.standardListForm}
+      width={640}
+      onFinish={async (values) => {
+        onSubmit(values);
+      }}
+      initialValues={current}
+      submitter={{
+        render: (_, dom) => (done ? null : dom),
+      }}
+      trigger={<>{children}</>}
+      modalProps={{
+        onCancel: () => onDone(),
+        destroyOnClose: true,
+        bodyStyle: done
+          ? {
+              padding: '72px 0',
+            }
+          : {},
+      }}
+    >
+      {!done ? (
+        <>
           <ProFormText
-            width="md"
-            label="课表名称"
             name="title"
+            label="课表名称"
             rules={[
               {
                 required: true,
@@ -54,11 +54,11 @@ const CreateSchedule: FC<Record<string, any>> = () => {
             ]}
             placeholder="请输入课表名称"
           />
+
           <ProFormSelect
-            width="md"
+            name="numWorkdays"
             label="工作日"
             tooltip="每周工作几天"
-            name="num_workdays"
             rules={[{ required: true, message: '请选择工作日' }]}
             options={[
               {
@@ -92,12 +92,15 @@ const CreateSchedule: FC<Record<string, any>> = () => {
             ]}
           />
           <ProFormSelect
-            width="md"
+            name="numDaysOff"
             label="假期"
             tooltip="每周休息几天"
-            name="num_days_off"
             rules={[{ required: true, message: '请选择假期' }]}
             options={[
+              {
+                value: '0',
+                label: '无',
+              },
               {
                 value: '1',
                 label: '1天',
@@ -130,118 +133,153 @@ const CreateSchedule: FC<Record<string, any>> = () => {
           />
 
           <ProFormSelect
-            width="md"
+            name="numMorningReadingClasses"
             label="早读课时"
             tooltip="早读上几节课"
-            name="num_morning_reading_classes"
             rules={[{ required: true, message: '请选择早读课时' }]}
             options={[
               {
+                value: '0',
+                label: '无',
+              },
+              {
                 value: '1',
-                label: '1节',
+                label: '1节课',
               },
               {
                 value: '2',
-                label: '2节',
+                label: '2节课',
               },
               {
                 value: '3',
-                label: '3节',
+                label: '3节课',
               },
               {
                 value: '4',
-                label: '4节',
+                label: '4节课',
               },
             ]}
           />
 
           <ProFormSelect
-            width="md"
+            name="numForenoonClasses"
             label="上午课时"
             tooltip="上午几节课"
-            name="num_forenoon_classes"
             rules={[{ required: true, message: '请选择上午课时' }]}
             options={[
               {
+                value: '0',
+                label: '无',
+              },
+              {
                 value: '1',
-                label: '1节',
+                label: '1节课',
               },
               {
                 value: '2',
-                label: '2节',
+                label: '2节课',
               },
               {
                 value: '3',
-                label: '3节',
+                label: '3节课',
               },
               {
                 value: '4',
-                label: '4节',
+                label: '4节课',
               },
               {
                 value: '5',
-                label: '5节',
+                label: '5节课',
               },
             ]}
           />
 
           <ProFormSelect
-            width="md"
+            name="numAfternoonClasses"
             label="下午课时"
             tooltip="下午几节课"
-            name="num_afternoon_classes"
             rules={[{ required: true, message: '请选择下午课时' }]}
             options={[
               {
+                value: '0',
+                label: '无',
+              },
+              {
                 value: '1',
-                label: '1节',
+                label: '1节课',
               },
               {
                 value: '2',
-                label: '2节',
+                label: '2节课',
               },
               {
                 value: '3',
-                label: '3节',
+                label: '3节课',
               },
               {
                 value: '4',
-                label: '4节',
+                label: '4节课',
               },
               {
                 value: '5',
-                label: '5节',
+                label: '5节课',
               },
             ]}
           />
           <ProFormSelect
-            width="md"
+            name="numNightClasses"
             label="晚自习课时"
             tooltip="晚自习几节课"
-            name="num_night_classes"
             rules={[{ required: true, message: '请选择晚自习课时' }]}
             options={[
               {
+                value: '0',
+                label: '无',
+              },
+              {
                 value: '1',
-                label: '1节',
+                label: '1节课',
               },
               {
                 value: '2',
-                label: '2节',
+                label: '2节课',
               },
               {
                 value: '3',
-                label: '3节',
+                label: '3节课',
               },
               {
                 value: '4',
-                label: '4节',
+                label: '4节课',
               },
             ]}
           />
-        </ProForm>
-      </Card>
-    </PageContainer>
+          <ProFormTextArea
+            name="desc"
+            label="备注"
+            rules={[
+              {
+                message: '请输入至少五个字符的备注！',
+                min: 5,
+              },
+            ]}
+            placeholder="请输入至少五个字符"
+          />
+        </>
+      ) : (
+        <Result
+          status="success"
+          title="操作成功"
+          subTitle="一系列的信息描述，很短同样也可以带标点。"
+          extra={
+            <Button type="primary" onClick={onDone}>
+              知道了
+            </Button>
+          }
+          className={styles.formResult}
+        />
+      )}
+    </ModalForm>
   );
 };
-export default CreateSchedule;
+export default OperationModal;
