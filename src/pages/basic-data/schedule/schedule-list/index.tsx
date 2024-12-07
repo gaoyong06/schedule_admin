@@ -1,19 +1,7 @@
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-import { FooterToolbar, PageContainer } from '@ant-design/pro-components';
+import { PageContainer } from '@ant-design/pro-components';
 import { useRequest } from '@umijs/max';
-import {
-  Avatar,
-  Button,
-  Card,
-  Col,
-  Dropdown,
-  Input,
-  List,
-  Modal,
-  Progress,
-  Radio,
-  Row,
-} from 'antd';
+import { Avatar, Badge, Button, Card, Dropdown, Input, List, Modal, Radio } from 'antd';
 import dayjs from 'dayjs';
 import type { FC } from 'react';
 import React, { useState } from 'react';
@@ -47,22 +35,21 @@ const ListContent = ({
   return (
     <div>
       <div className={styles.listContentItem}>
-        <span>Owner</span>
+        <span>创建者</span>
         <p>{owner}</p>
       </div>
       <div className={styles.listContentItem}>
-        <span>开始时间</span>
+        <span>创建时间</span>
         <p>{dayjs(createdAt).format('YYYY-MM-DD HH:mm')}</p>
       </div>
       <div className={styles.listContentItem}>
-        <Progress
-          percent={percent}
-          status={status}
-          strokeWidth={6}
-          style={{
-            width: 180,
-          }}
-        />
+        <span>最近修改</span>
+        <p>{dayjs(createdAt).format('YYYY-MM-DD HH:mm')}</p>
+      </div>
+      <div className={styles.listContentItem}>
+        <p>
+          <Badge status="processing" text="进行中" />
+        </p>
       </div>
     </div>
   );
@@ -100,9 +87,9 @@ export const BasicList: FC = () => {
   );
   const list = listData?.list || [];
   const paginationProps = {
-    showSizeChanger: true,
-    showQuickJumper: true,
-    pageSize: 5,
+    showSizeChanger: false,
+    showQuickJumper: false,
+    pageSize: 10,
     total: list.length,
   };
   const showEditModal = (item: BasicListItemDataType) => {
@@ -128,12 +115,19 @@ export const BasicList: FC = () => {
   };
   const extraContent = (
     <div>
-      <RadioGroup defaultValue="all">
-        <RadioButton value="all">全部</RadioButton>
-        <RadioButton value="progress">进行中</RadioButton>
-        <RadioButton value="waiting">等待中</RadioButton>
-      </RadioGroup>
-      <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
+      <Button
+        type="primary"
+        key="primary"
+        onClick={() => {
+          setVisible(true);
+        }}
+        style={{
+          marginRight: '16px',
+        }}
+      >
+        <PlusOutlined />
+        新建
+      </Button>
     </div>
   );
   const MoreBtn: React.FC<{
@@ -171,22 +165,8 @@ export const BasicList: FC = () => {
   };
   return (
     <div>
-      <PageContainer>
+      <PageContainer content="表单页用于向用户收集或验证信息，基础表单常见于数据项较少的表单场景。">
         <div className={styles.standardList}>
-          <Card bordered={false}>
-            <Row>
-              <Col sm={8} xs={24}>
-                <Info title="我的待办" value="8个任务" bordered />
-              </Col>
-              <Col sm={8} xs={24}>
-                <Info title="本周任务平均处理时间" value="32分钟" bordered />
-              </Col>
-              <Col sm={8} xs={24}>
-                <Info title="本周完成任务数" value="24个任务" />
-              </Col>
-            </Row>
-          </Card>
-
           <Card
             className={styles.listCard}
             bordered={false}
@@ -232,22 +212,6 @@ export const BasicList: FC = () => {
           </Card>
         </div>
       </PageContainer>
-
-      <FooterToolbar>
-        <Button
-          type="dashed"
-          onClick={() => {
-            setVisible(true);
-          }}
-          style={{
-            width: '100%',
-            marginBottom: 8,
-          }}
-        >
-          <PlusOutlined />
-          添加
-        </Button>
-      </FooterToolbar>
 
       <OperationModal
         done={done}

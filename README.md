@@ -2,6 +2,8 @@
 
 https://umijs.org/docs/guides/getting-started
 
+在线文档： https://ant-design.antgroup.com/components/pagination-cn
+
 #### 清理 Node 模块缓存
 
 npm cache clean --force
