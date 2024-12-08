@@ -20,6 +20,14 @@ nvm use 18
 
 后面要去掉下面这两行 src/ types/
 
+#### OpenAPI 生成 service 文件
+
+yarn run openapi
+
+#### 启动开发环境项目
+
+yarn run dev
+
 # Ant Design Pro
 
 This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.

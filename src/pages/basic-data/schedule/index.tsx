@@ -6,8 +6,8 @@ import dayjs from 'dayjs';
 import type { FC } from 'react';
 import React, { useState } from 'react';
 import OperationModal from './components/OperationModal';
-import type { BasicListItemDataType } from './data.d';
-import { addFakeList, queryFakeList, removeFakeList, updateFakeList } from './service';
+import type { ScheduleDisplayItem } from './data.d';
+import { addSchedule, queryScheduleList, removeSchedule, updateSchedule } from './service';
 import useStyles from './style.style';
 
 const IconFont = createFromIconfontCN({
@@ -42,16 +42,16 @@ const Info: FC<{
   );
 };
 const ListContent = ({
-  data: { owner, createdAt, percent, status },
+  data: { creator, createdAt, updatedAt, status },
 }: {
-  data: BasicListItemDataType;
+  data: ScheduleDisplayItem;
 }) => {
   const { styles } = useStyles();
   return (
     <div>
       <div className={styles.listContentItem}>
         <span>创建者</span>
-        <p>{owner}</p>
+        <p>{creator}</p>
       </div>
       <div className={styles.listContentItem}>
         <span>创建时间</span>
@@ -59,7 +59,7 @@ const ListContent = ({
       </div>
       <div className={styles.listContentItem}>
         <span>最近修改</span>
-        <p>{dayjs(createdAt).format('YYYY-MM-DD HH:mm')}</p>
+        <p>{dayjs(updatedAt).format('YYYY-MM-DD HH:mm')}</p>
       </div>
       <div className={styles.listContentItem}>
         <p>
@@ -73,25 +73,25 @@ export const BasicList: FC = () => {
   const { styles } = useStyles();
   const [done, setDone] = useState<boolean>(false);
   const [open, setVisible] = useState<boolean>(false);
-  const [current, setCurrent] = useState<Partial<BasicListItemDataType> | undefined>(undefined);
+  const [current, setCurrent] = useState<Partial<ScheduleDisplayItem> | undefined>(undefined);
   const {
     data: listData,
     loading,
     mutate,
   } = useRequest(() => {
-    return queryFakeList({
+    return queryScheduleList({
       count: 50,
     });
   });
   const { run: postRun } = useRequest(
-    (method, params) => {
+    (method: string, params: any) => {
       if (method === 'remove') {
-        return removeFakeList(params);
+        return removeSchedule(params.id);
       }
       if (method === 'update') {
-        return updateFakeList(params);
+        return updateSchedule(params.id, params);
       }
-      return addFakeList(params);
+      return addSchedule(params);
     },
     {
       manual: true,
@@ -107,7 +107,7 @@ export const BasicList: FC = () => {
     pageSize: 10,
     total: list.length,
   };
-  const showEditModal = (item: BasicListItemDataType) => {
+  const showEditModal = (item: ScheduleDisplayItem) => {
     setVisible(true);
     setCurrent(item);
   };
@@ -116,7 +116,7 @@ export const BasicList: FC = () => {
       id,
     });
   };
-  const editAndDelete = (key: string | number, currentItem: BasicListItemDataType) => {
+  const editAndDelete = (key: string | number, currentItem: ScheduleDisplayItem) => {
     if (key === 'edit') showEditModal(currentItem);
     else if (key === 'delete') {
       Modal.confirm({
@@ -147,7 +147,7 @@ export const BasicList: FC = () => {
     </div>
   );
   const MoreBtn: React.FC<{
-    item: BasicListItemDataType;
+    item: ScheduleDisplayItem;
   }> = ({ item }) => (
     <Dropdown
       menu={{
@@ -174,7 +174,7 @@ export const BasicList: FC = () => {
     setVisible(false);
     setCurrent({});
   };
-  const handleSubmit = (values: BasicListItemDataType) => {
+  const handleSubmit = (values: ScheduleDisplayItem) => {
     setDone(true);
     const method = values?.id ? 'update' : 'add';
     postRun(method, values);
