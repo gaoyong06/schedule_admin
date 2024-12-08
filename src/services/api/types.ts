@@ -226,6 +226,24 @@ declare namespace API {
     week_type?: string;
   };
 
+  type CurrentUser = {
+    name?: string;
+    avatar?: string;
+    userid?: string;
+    email?: string;
+    signature?: string;
+    title?: string;
+    group?: string;
+    tags?: { key?: string; label?: string }[];
+    notifyCount?: number;
+    unreadCount?: number;
+    country?: string;
+    access?: string;
+    geographic?: Geographic;
+    address?: string;
+    phone?: string;
+  };
+
   type deleteApiV1SubjectGroupsIdParams = {
     /** 科目分组ID */
     id: number;
@@ -700,6 +718,19 @@ declare namespace API {
   };
 
   type H = true;
+
+  type LoginParams = {
+    username?: string;
+    password?: string;
+    phone?: string;
+    type?: string;
+  };
+
+  type LoginResult = {
+    currentAuthority?: string;
+    status?: 'ok' | 'error';
+    type?: string;
+  };
 
   type NullString = {
     string?: string;
@@ -1244,6 +1275,7 @@ declare namespace API {
   type UserCredentials = {
     password?: string;
     phone?: string;
+    type?: string;
   };
 
   type UserInfoResponse = {

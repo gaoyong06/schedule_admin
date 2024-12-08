@@ -25,6 +25,19 @@ export async function getUserInfo(options?: { [key: string]: any }) {
   });
 }
 
+/** 获取当前用户信息 */
+export async function currentUser(options?: {
+  [key: string]: any;
+}): Promise<API.CurrentUser | undefined> {
+  try {
+    const response = await getUserInfo(options);
+    return response.data as API.CurrentUser;
+  } catch (error) {
+    console.error('Failed to fetch current user:', error);
+    return undefined;
+  }
+}
+
 /** 用户登录 用户登录端点 POST /api/v1/users/login */
 export async function postApiV1UsersLogin(
   body: API.UserCredentials,

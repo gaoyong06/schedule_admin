@@ -117,7 +117,7 @@ const Login: React.FC = () => {
     try {
       // 登录
       const res = await login({ ...values, type });
-      if (res.code === 0) {
+      if (res.code === 200) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
@@ -130,7 +130,13 @@ const Login: React.FC = () => {
       }
       console.log(res);
       // 如果失败去设置用户错误信息
-      setUserLoginState(res);
+      setUserLoginState({
+        status: res.code === 200 ? 'ok' : 'error',
+        type: 'account',
+
+        // TODO: 这里要检查一下
+        currentAuthority: res.code === 200 ? 'admin' : undefined,
+      });
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
