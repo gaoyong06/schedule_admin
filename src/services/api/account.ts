@@ -40,7 +40,7 @@ export async function currentUser(options?: {
 
 /** 用户登录 用户登录端点 POST /api/v1/users/login */
 export async function postApiV1UsersLogin(
-  body: API.UserCredentials,
+  body: API.LoginRequest,
   options?: { [key: string]: any },
 ) {
   return request<API.Response>('/api/v1/users/login', {

@@ -820,9 +820,8 @@ declare namespace API {
   };
 
   type RegisterUserReq = {
-    /** 密码 */
+    captcha: string;
     password: string;
-    /** 手机号 */
     phone: string;
   };
 
@@ -1272,7 +1271,7 @@ declare namespace API {
     week_type?: string;
   };
 
-  type UserCredentials = {
+  type LoginRequest = {
     password?: string;
     phone?: string;
     type?: string;
