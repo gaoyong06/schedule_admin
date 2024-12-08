@@ -427,11 +427,9 @@ declare namespace API {
   };
 
   type getFacilitiesBySchoolParams = {
-    /** 用户ID */
     uid: number;
-    /** 页码 */
+    school_id: number;
     page?: number;
-    /** 每页大小 */
     page_size?: number;
   };
 
@@ -460,6 +458,7 @@ declare namespace API {
   };
 
   type getSchedulesBySchoolParams = {
+    school_id: number;
     /** 页码 */
     page?: number;
     /** 每页大小 */
@@ -467,6 +466,7 @@ declare namespace API {
   };
 
   type getSchedulesByUserParams = {
+    uid: number;
     /** 页码 */
     page?: number;
     /** 每页大小 */
@@ -835,6 +835,7 @@ declare namespace API {
   };
 
   type Schedule = {
+    schedule_id: number;
     /** 创建人用户uid */
     created_by?: number;
     /** 备注信息 */
@@ -859,6 +860,8 @@ declare namespace API {
     status?: 'pending' | 'running' | 'success' | 'failed' | 'completed' | 'published';
     /** 最后修改人用户uid */
     updated_by?: number;
+    created_at?: string;
+    updated_at?: string;
   };
 
   type School = {
@@ -1105,6 +1108,11 @@ declare namespace API {
   type UpdateGradeReq = {
     name?: string;
     stage_id?: number;
+  };
+
+  type updateScheduleParams = {
+    /** 课表方案ID */
+    id: number;
   };
 
   type UpdateScheduleReq = {

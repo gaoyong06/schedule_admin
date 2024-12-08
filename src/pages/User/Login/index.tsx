@@ -117,12 +117,18 @@ const Login: React.FC = () => {
     try {
       // 登录
       const res = await login({ ...values, type });
-      if (res.code === 200) {
+      if (res.code === 0) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
         });
         message.success(defaultLoginSuccessMessage);
+
+        // Store token in localStorage
+        if (res.data?.token) {
+          localStorage.setItem('AUTH_TOKEN', res.data.token);
+        }
+
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
@@ -134,8 +140,7 @@ const Login: React.FC = () => {
         status: res.code === 0 ? 'ok' : 'error',
         type: 'account',
 
-        // TODO: 这里要检查一下
-        currentAuthority: res.code === 200 ? 'admin' : undefined,
+        currentAuthority: res.code === 0 ? res.data.role : undefined,
       });
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
