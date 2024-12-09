@@ -1,7 +1,6 @@
-import { currentUser } from '@/services/api/account';
 import { createFromIconfontCN, DownOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { useRequest } from '@umijs/max';
+import { useModel, useRequest } from '@umijs/max';
 import { Avatar, Badge, Button, Card, Dropdown, Input, List, Modal, Radio } from 'antd';
 import dayjs from 'dayjs';
 import type { FC } from 'react';
@@ -74,7 +73,10 @@ const ListContent = ({
     </div>
   );
 };
-export const BasicList: FC = () => {
+export const ScheduleList: FC = () => {
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+
   const { styles } = useStyles();
   const [done, setDone] = useState<boolean>(false);
   const [open, setVisible] = useState<boolean>(false);
@@ -85,7 +87,7 @@ export const BasicList: FC = () => {
     mutate,
   } = useRequest(() => {
     return getSchedulesByUser({
-      uid: currentUser.uid?.uid || 0,
+      uid: currentUser?.uid || 0,
       page: 1,
       page_size: 50,
     });
@@ -278,4 +280,4 @@ export const BasicList: FC = () => {
     </div>
   );
 };
-export default BasicList;
+export default ScheduleList;
