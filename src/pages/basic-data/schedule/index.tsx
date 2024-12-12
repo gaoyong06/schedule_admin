@@ -1,13 +1,17 @@
 import { createFromIconfontCN, DownOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { useRequest } from '@umijs/max';
+import { useModel, useRequest } from '@umijs/max';
 import { Avatar, Badge, Button, Card, Dropdown, Input, List, Modal, Radio } from 'antd';
 import dayjs from 'dayjs';
 import type { FC } from 'react';
 import React, { useState } from 'react';
+import {
+  createSchedule,
+  deleteSchedule,
+  getSchedulesByUser,
+  updateSchedule,
+} from '../../../services/api/schedule';
 import OperationModal from './components/OperationModal';
-import type { BasicListItemDataType } from './data.d';
-import { addFakeList, queryFakeList, removeFakeList, updateFakeList } from './service';
 import useStyles from './style.style';
 
 const IconFont = createFromIconfontCN({
@@ -42,24 +46,24 @@ const Info: FC<{
   );
 };
 const ListContent = ({
-  data: { owner, createdAt, percent, status },
+  data: { created_by, created_at, updated_at, status },
 }: {
-  data: BasicListItemDataType;
+  data: API.Schedule;
 }) => {
   const { styles } = useStyles();
   return (
     <div>
       <div className={styles.listContentItem}>
         <span>创建者</span>
-        <p>{owner}</p>
+        <p>{created_by}</p>
       </div>
       <div className={styles.listContentItem}>
         <span>创建时间</span>
-        <p>{dayjs(createdAt).format('YYYY-MM-DD HH:mm')}</p>
+        <p>{dayjs(created_at).format('YYYY-MM-DD HH:mm')}</p>
       </div>
       <div className={styles.listContentItem}>
         <span>最近修改</span>
-        <p>{dayjs(createdAt).format('YYYY-MM-DD HH:mm')}</p>
+        <p>{dayjs(updated_at).format('YYYY-MM-DD HH:mm')}</p>
       </div>
       <div className={styles.listContentItem}>
         <p>
@@ -69,29 +73,34 @@ const ListContent = ({
     </div>
   );
 };
-export const BasicList: FC = () => {
+export const ScheduleList: FC = () => {
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+
   const { styles } = useStyles();
   const [done, setDone] = useState<boolean>(false);
   const [open, setVisible] = useState<boolean>(false);
-  const [current, setCurrent] = useState<Partial<BasicListItemDataType> | undefined>(undefined);
+  const [current, setCurrent] = useState<Partial<API.Schedule> | undefined>(undefined);
   const {
     data: listData,
     loading,
     mutate,
   } = useRequest(() => {
-    return queryFakeList({
-      count: 50,
+    return getSchedulesByUser({
+      uid: currentUser?.uid || 0,
+      page: 1,
+      page_size: 50,
     });
   });
   const { run: postRun } = useRequest(
-    (method, params) => {
+    (method: string, params: any) => {
       if (method === 'remove') {
-        return removeFakeList(params);
+        return deleteSchedule(params.id);
       }
       if (method === 'update') {
-        return updateFakeList(params);
+        return updateSchedule(params.id, params);
       }
-      return addFakeList(params);
+      return createSchedule(params);
     },
     {
       manual: true,
@@ -107,16 +116,16 @@ export const BasicList: FC = () => {
     pageSize: 10,
     total: list.length,
   };
-  const showEditModal = (item: BasicListItemDataType) => {
+  const showEditModal = (item: API.Schedule) => {
     setVisible(true);
     setCurrent(item);
   };
-  const deleteItem = (id: string) => {
+  const deleteItem = (id: number) => {
     postRun('remove', {
       id,
     });
   };
-  const editAndDelete = (key: string | number, currentItem: BasicListItemDataType) => {
+  const editAndDelete = (key: string | number, currentItem: API.Schedule) => {
     if (key === 'edit') showEditModal(currentItem);
     else if (key === 'delete') {
       Modal.confirm({
@@ -124,7 +133,7 @@ export const BasicList: FC = () => {
         content: '确定删除该任务吗？',
         okText: '确认',
         cancelText: '取消',
-        onOk: () => deleteItem(currentItem.id),
+        onOk: () => deleteItem(currentItem.schedule_id),
       });
     }
   };
@@ -147,7 +156,7 @@ export const BasicList: FC = () => {
     </div>
   );
   const MoreBtn: React.FC<{
-    item: BasicListItemDataType;
+    item: API.Schedule;
   }> = ({ item }) => (
     <Dropdown
       menu={{
@@ -174,9 +183,9 @@ export const BasicList: FC = () => {
     setVisible(false);
     setCurrent({});
   };
-  const handleSubmit = (values: BasicListItemDataType) => {
+  const handleSubmit = (values: API.Schedule) => {
     setDone(true);
-    const method = values?.id ? 'update' : 'add';
+    const method = values?.schedule_id ? 'update' : 'add';
     postRun(method, values);
   };
   return (
@@ -197,11 +206,11 @@ export const BasicList: FC = () => {
           >
             <List
               size="large"
-              rowKey="id"
+              rowKey="schedule_id"
               loading={loading}
               pagination={paginationProps}
               dataSource={list}
-              renderItem={(item) => (
+              renderItem={(item: API.Schedule) => (
                 <List.Item
                   actions={[
                     <a
@@ -224,7 +233,7 @@ export const BasicList: FC = () => {
                         style={{
                           backgroundColor:
                             animalIcons[
-                              item.title
+                              (item.name || 'default')
                                 .split('')
                                 .reduce((acc, char) => acc + char.charCodeAt(0), 0) %
                                 animalIcons.length
@@ -240,7 +249,7 @@ export const BasicList: FC = () => {
                       >
                         {
                           animalIcons[
-                            item.title
+                            (item.name || 'default')
                               .split('')
                               .reduce((acc, char) => acc + char.charCodeAt(0), 0) %
                               animalIcons.length
@@ -248,8 +257,10 @@ export const BasicList: FC = () => {
                         }
                       </Avatar>
                     }
-                    title={<a href={item.href}>{item.title}</a>}
-                    description={item.subDescription}
+                    title={
+                      <a href={`/basic-data/schedule/detail/${item.schedule_id}`}>{item.name}</a>
+                    }
+                    description={item.desc}
                   />
                   <ListContent data={item} />
                 </List.Item>
@@ -269,4 +280,4 @@ export const BasicList: FC = () => {
     </div>
   );
 };
-export default BasicList;
+export default ScheduleList;

@@ -1,6 +1,5 @@
 import { Footer } from '@/components';
-import { login } from '@/services/ant-design-pro/api';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import { getCaptcha, login } from '@/services/api';
 import {
   AlipayCircleOutlined,
   LockOutlined,
@@ -117,21 +116,32 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.LoginParams) => {
     try {
       // 登录
-      const msg = await login({ ...values, type });
-      if (msg.status === 'ok') {
+      const res = await login({ ...values, type });
+      if (res.code === 0) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
         });
         message.success(defaultLoginSuccessMessage);
+
+        // Store token in localStorage
+        if (res.data?.token) {
+          localStorage.setItem('AUTH_TOKEN', res.data.token);
+        }
+
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
         return;
       }
-      console.log(msg);
+      console.log(res);
       // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
+      setUserLoginState({
+        status: res.code === 0 ? 'ok' : 'error',
+        type: 'account',
+
+        currentAuthority: res.code === 0 ? res.data.role : undefined,
+      });
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
@@ -210,29 +220,29 @@ const Login: React.FC = () => {
             <LoginMessage
               content={intl.formatMessage({
                 id: 'pages.login.accountLogin.errorMessage',
-                defaultMessage: '账户或密码错误(admin/ant.design)',
+                defaultMessage: '账户或密码错误',
               })}
             />
           )}
           {type === 'account' && (
             <>
               <ProFormText
-                name="username"
+                name="phone"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined />,
                 }}
                 placeholder={intl.formatMessage({
-                  id: 'pages.login.username.placeholder',
-                  defaultMessage: '用户名: admin or user',
+                  id: 'pages.login.phone.placeholder',
+                  defaultMessage: '请输入手机号',
                 })}
                 rules={[
                   {
                     required: true,
                     message: (
                       <FormattedMessage
-                        id="pages.login.username.required"
-                        defaultMessage="请输入用户名!"
+                        id="pages.login.phone.required"
+                        defaultMessage="请输入手机号"
                       />
                     ),
                   },
@@ -246,7 +256,7 @@ const Login: React.FC = () => {
                 }}
                 placeholder={intl.formatMessage({
                   id: 'pages.login.password.placeholder',
-                  defaultMessage: '密码: ant.design',
+                  defaultMessage: '请输入密码',
                 })}
                 rules={[
                   {
@@ -254,7 +264,7 @@ const Login: React.FC = () => {
                     message: (
                       <FormattedMessage
                         id="pages.login.password.required"
-                        defaultMessage="请输入密码！"
+                        defaultMessage="请输入密码"
                       />
                     ),
                   },
@@ -282,7 +292,7 @@ const Login: React.FC = () => {
                     message: (
                       <FormattedMessage
                         id="pages.login.phoneNumber.required"
-                        defaultMessage="请输入手机号！"
+                        defaultMessage="请输入手机号"
                       />
                     ),
                   },
@@ -291,7 +301,7 @@ const Login: React.FC = () => {
                     message: (
                       <FormattedMessage
                         id="pages.login.phoneNumber.invalid"
-                        defaultMessage="手机号格式错误！"
+                        defaultMessage="手机号格式错误"
                       />
                     ),
                   },
@@ -334,7 +344,7 @@ const Login: React.FC = () => {
                   },
                 ]}
                 onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
+                  const result = await getCaptcha({
                     phone,
                   });
                   if (!result) {

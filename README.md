@@ -20,9 +20,21 @@ nvm use 18
 
 后面要去掉下面这两行 src/ types/
 
+<<<<<<< HEAD
+
 #### 权限处理
 
-https://v3.umijs.org/zh-CN/plugins/plugin-access
+# https://v3.umijs.org/zh-CN/plugins/plugin-access
+
+#### OpenAPI 生成 service 文件
+
+yarn run openapi
+
+#### 启动开发环境项目
+
+yarn run dev
+
+> > > > > > > 25965d338be4f057972ab15fa0e9fca88ddc99eb
 
 # Ant Design Pro
 

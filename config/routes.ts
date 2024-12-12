@@ -67,6 +67,11 @@ export default [
         redirect: '/basic-data/schedule',
       },
       {
+        name: 'table-list',
+        path: '/basic-data/table-list',
+        component: './basic-data/table-list',
+      },
+      {
         name: 'schedule',
         path: '/basic-data/schedule',
         component: './basic-data/schedule',
