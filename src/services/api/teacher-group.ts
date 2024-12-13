@@ -64,15 +64,15 @@ export async function deleteApiV1TeacherGroupsId(
   });
 }
 
-/** 获取学校的教师分组列表 用于获取学校教师分组列表 GET /api/v1/teacher-groups/school/${param0} */
-export async function getTeacherGroupsBySchool(
+/** 获取组织的教师分组列表 用于获取组织教师分组列表 GET /api/v1/teacher-groups/org/${param0} */
+export async function getTeacherGroupsByOrg(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getTeacherGroupsBySchoolParams,
+  params: API.getTeacherGroupsByOrgParams,
   options?: { [key: string]: any },
 ) {
   const { school_id: param0, ...queryParams } = params;
   return request<API.Response & { data?: API.PageList & { list?: API.TeacherGroup[] } }>(
-    `/api/v1/teacher-groups/school/${param0}`,
+    `/api/v1/teacher-groups/org/${param0}`,
     {
       method: 'GET',
       params: {

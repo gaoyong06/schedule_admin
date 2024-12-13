@@ -91,15 +91,15 @@ export async function batchDeleteTeachers(
   });
 }
 
-/** 获取学校的教师列表 用于获取学校的教师列表 GET /api/v1/teachers/school/${param0} */
-export async function getTeachersBySchool(
+/** 获取组织的教师列表 用于获取组织的教师列表 GET /api/v1/teachers/org/${param0} */
+export async function getTeachersByOrg(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getTeachersBySchoolParams,
+  params: API.getTeachersByOrgParams,
   options?: { [key: string]: any },
 ) {
   const { school_id: param0, ...queryParams } = params;
   return request<API.Response & { data?: API.PageList & { list?: API.Teacher[] } }>(
-    `/api/v1/teachers/school/${param0}`,
+    `/api/v1/teachers/org/${param0}`,
     {
       method: 'GET',
       params: {

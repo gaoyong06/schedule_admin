@@ -64,13 +64,13 @@ export async function deleteFacility(
   });
 }
 
-/** 获取学校的教学场地列表 获取学校的教学场地列表 GET /api/v1/facilities/school/${param1} */
-export async function getFacilitiesBySchool(
+/** 获取组织的教学场地列表 获取组织的教学场地列表 GET /api/v1/facilities/school/${param1} */
+export async function getFacilitiesByOrg(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getFacilitiesBySchoolParams,
+  params: API.getFacilitiesByOrgParams,
   options?: { [key: string]: any },
 ) {
-  const { uid: param0, school_id: param1, ...queryParams } = params;
+  const { uid: param0, org_id: param1, ...queryParams } = params;
   return request<API.Response & { data?: API.PageList & { list?: API.Facility[] } }>(
     `/api/v1/facilities/school/${param1}`,
     {

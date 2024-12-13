@@ -64,14 +64,14 @@ export async function deleteApiV1SubjectGroupsId(
   });
 }
 
-/** 获取学校的科目分组列表 用于获取学校科目分组列表 GET /api/v1/subject-groups/school/${param0} */
-export async function getSubjectGroupsBySchool(
+/** 获取组织的科目分组列表 用于获取组织科目分组列表 GET /api/v1/subject-groups/org/${param0} */
+export async function getSubjectGroupsByOrg(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getSubjectGroupsBySchoolParams,
+  params: API.getSubjectGroupsByOrgParams,
   options?: { [key: string]: any },
 ) {
-  const { school_id: param0, ...queryParams } = params;
-  return request<API.H>(`/api/v1/subject-groups/school/${param0}`, {
+  const { org_id: param0, ...queryParams } = params;
+  return request<API.H>(`/api/v1/subject-groups/org/${param0}`, {
     method: 'GET',
     params: {
       // page has a default value: 1

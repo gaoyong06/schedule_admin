@@ -20,8 +20,8 @@ declare namespace API {
     grade_id?: number;
     /** 名称 */
     name?: string;
-    /** 学校id */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     stage_id?: number;
   };
 
@@ -35,7 +35,7 @@ declare namespace API {
     periods?: string;
     rule_id?: number;
     schedule_id?: number;
-    school_id?: number;
+    org_id?: number;
     subject_id?: number;
     teacher_id?: number;
     updated_at?: string;
@@ -44,7 +44,7 @@ declare namespace API {
   type CreateClassReq = {
     grade_id?: number;
     name?: string;
-    school_id?: number;
+    org_id?: number;
     stage_id?: number;
   };
 
@@ -55,7 +55,7 @@ declare namespace API {
     limit: 'fixed' | 'prefer' | 'avoid' | 'forbid';
     periods: string;
     schedule_id?: number;
-    school_id?: number;
+    org_id?: number;
     subject_id?: number;
     teacher_id?: number;
   };
@@ -63,14 +63,14 @@ declare namespace API {
   type CreateFacilityReq = {
     capacity?: number;
     name?: string;
-    school_id?: number;
+    org_id?: number;
     /** 场地类型 exclusive: 专用教学场所, shared: 共享教学场所 */
     type?: 'exclusive' | 'shared';
   };
 
   type CreateGradeReq = {
     name?: string;
-    school_id?: number;
+    org_id?: number;
     stage_id?: number;
   };
 
@@ -91,8 +91,8 @@ declare namespace API {
     num_night_classes?: number;
     /** 一周工作日, 默认:5天 */
     num_workdays?: number;
-    /** 学校id */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
   };
 
   type CreateSchoolReq = {
@@ -112,7 +112,7 @@ declare namespace API {
     day_of_week: number;
     grade_id: number;
     schedule_id: number;
-    school_id: number;
+    org_id: number;
     subject_id: number;
     teacher_id?: number;
   };
@@ -124,7 +124,7 @@ declare namespace API {
     grade_id: number;
     object: 'subject' | 'teacher';
     schedule_id: number;
-    school_id: number;
+    org_id: number;
     subject_id?: number;
     teacher_id?: number;
     type: 'fixed' | 'min' | 'max';
@@ -132,15 +132,15 @@ declare namespace API {
 
   type CreateSubjectGroupReq = {
     name: string;
-    /** 学校id */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     subject_ids: string;
   };
 
   type CreateSubjectMutexRuleReq = {
     mutex_subject_id: number;
     schedule_id: number;
-    school_id: number;
+    org_id: number;
     subject_id: number;
   };
 
@@ -151,7 +151,7 @@ declare namespace API {
     object: 'subject' | 'teacher';
     period_of_day: number;
     schedule_id: number;
-    school_id: number;
+    org_id: number;
     subject_id?: number;
     teacher_id?: number;
     type: 'fixed' | 'min' | 'max';
@@ -159,7 +159,7 @@ declare namespace API {
 
   type CreateSubjectReq = {
     name?: string;
-    school_id?: number;
+    org_id?: number;
     /** 科目简称 */
     short_name?: string;
   };
@@ -170,7 +170,7 @@ declare namespace API {
     object: 'subject' | 'teacher';
     period_of_day: number;
     schedule_id: number;
-    school_id: number;
+    org_id: number;
     subject_id?: number;
     teacher_id?: number;
     type: 'fixed' | 'min' | 'max';
@@ -182,8 +182,8 @@ declare namespace API {
 
   type CreateTeacherGroupReq = {
     name: string;
-    /** 学校id */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     teacher_ids: string;
   };
 
@@ -191,7 +191,7 @@ declare namespace API {
     main_subject?: number;
     name: string;
     phone?: string;
-    school_id: number;
+    org_id: number;
     short_name?: string;
   };
 
@@ -204,8 +204,8 @@ declare namespace API {
     periods?: string;
     /** 排课ID */
     schedule_id: number;
-    /** 学校ID */
-    school_id: number;
+    /** 组织ID */
+    org_id: number;
     /** 教师组ID */
     teacher_group_id: number;
     /** 教师ID */
@@ -218,7 +218,7 @@ declare namespace API {
     grade_id?: number;
     num_classes_per_week?: number;
     num_connected_classes_per_week?: number;
-    school_id?: number;
+    org_id?: number;
     subject_id?: number;
     subject_id_for_week?: number;
     subject_id_on_diff_day?: number;
@@ -367,8 +367,8 @@ declare namespace API {
     facility_id?: number;
     /** 场地名称 */
     name?: string;
-    /** 学校id */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     /** 场地类型 exclusive: 专用教学场所, shared: 共享教学场所 */
     type?: string;
   };
@@ -418,17 +418,17 @@ declare namespace API {
     page_size: number;
     /** 课表方案ID */
     schedule_id: number;
-    /** 学校ID */
-    school_id: number;
+    /** 组织ID */
+    org_id: number;
     /** 年级ID */
     grade_id?: number;
     /** 班级ID */
     class_id?: number;
   };
 
-  type getFacilitiesBySchoolParams = {
+  type getFacilitiesByOrgParams = {
     uid: number;
-    school_id: number;
+    org_id: number;
     page?: number;
     page_size?: number;
   };
@@ -445,7 +445,7 @@ declare namespace API {
 
   type getGradesByUserParams = {
     /** 用户ID */
-    school_id: number;
+    org_id: number;
     /** 页码 */
     page?: number;
     /** 每页大小 */
@@ -457,8 +457,8 @@ declare namespace API {
     id: number;
   };
 
-  type getSchedulesBySchoolParams = {
-    school_id: number;
+  type getSchedulesByOrgParams = {
+    org_id: number;
     /** 页码 */
     page?: number;
     /** 每页大小 */
@@ -499,8 +499,8 @@ declare namespace API {
     page_size?: number;
     /** 课表方案ID */
     schedule_id?: number;
-    /** 学校ID */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     /** 年级ID */
     grade_id?: number;
     /** 班级ID */
@@ -525,8 +525,8 @@ declare namespace API {
     page_size?: number;
     /** 课表方案ID */
     schedule_id?: number;
-    /** 学校ID */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     /** 年级ID */
     grade_id?: number;
     /** 班级ID */
@@ -543,7 +543,7 @@ declare namespace API {
     type?: string;
   };
 
-  type getSubjectGroupsBySchoolParams = {
+  type getSubjectGroupsByOrgParams = {
     /** 页码 */
     page?: number;
     /** 每页大小 */
@@ -562,8 +562,8 @@ declare namespace API {
     page_size: number;
     /** 课表方案ID */
     schedule_id: number;
-    /** 学校ID */
-    school_id: number;
+    /** 组织ID */
+    org_id: number;
     /** 科目ID */
     subject_id?: number;
     /** 互斥科目ID */
@@ -587,8 +587,8 @@ declare namespace API {
     page_size?: number;
     /** 课表方案ID */
     schedule_id?: number;
-    /** 学校ID */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     /** 年级ID */
     grade_id?: number;
     /** 班级ID */
@@ -617,8 +617,8 @@ declare namespace API {
     page_size: number;
     /** 课表方案ID */
     schedule_id: number;
-    /** 学校ID */
-    school_id: number;
+    /** 组织ID */
+    org_id: number;
     /** 年级ID */
     grade_id?: number;
     /** 班级ID */
@@ -631,7 +631,7 @@ declare namespace API {
     teacher_id?: number;
   };
 
-  type getSubjectsBySchoolParams = {
+  type getSubjectsByOrgParams = {
     /** 页码 */
     page?: number;
     /** 每页大小 */
@@ -652,7 +652,7 @@ declare namespace API {
     status?: string;
   };
 
-  type getTeacherGroupsBySchoolParams = {
+  type getTeacherGroupsByOrgParams = {
     /** 页码 */
     page?: number;
     /** 每页大小 */
@@ -676,8 +676,8 @@ declare namespace API {
     page_size?: number;
     /** 课表方案ID */
     schedule_id?: number;
-    /** 学校ID */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     /** 教师分组ID */
     teacher_group_id?: number;
     /** 教师ID */
@@ -686,7 +686,7 @@ declare namespace API {
     limit?: string;
   };
 
-  type getTeachersBySchoolParams = {
+  type getTeachersByOrgParams = {
     /** 页码 */
     page?: number;
     /** 每页大小 */
@@ -702,7 +702,7 @@ declare namespace API {
     eduStage?: EduStage;
     grade_id?: number;
     name?: string;
-    school_id?: number;
+    org_id?: number;
     stage_id?: number;
   };
 
@@ -711,8 +711,8 @@ declare namespace API {
     class_count?: number;
     /** 年级名称 */
     grade_name?: string;
-    /** 学校ID */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     /** 教育阶段id */
     stage_id?: number;
   };
@@ -854,8 +854,8 @@ declare namespace API {
     num_night_classes?: number;
     /** 一周工作日, 默认:5天 */
     num_workdays?: number;
-    /** 学校id */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     /** 课表状态(未排课、排课中、已排课、排课冲突、已确认、已发布) */
     status?: 'pending' | 'running' | 'success' | 'failed' | 'completed' | 'published';
     /** 最后修改人用户uid */
@@ -873,6 +873,8 @@ declare namespace API {
     schoolType?: SchoolType;
     /** 学校id */
     school_id?: number;
+    /** 组织id */
+    org_id?: number;
     /** 科目简称 */
     short_name?: string;
     /** 学校类型id */
@@ -901,8 +903,8 @@ declare namespace API {
   type Subject = {
     /** 科目名称 */
     name?: string;
-    /** 学校id */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     /** 科目简称 */
     short_name?: string;
   };
@@ -916,7 +918,7 @@ declare namespace API {
     grade_id?: number;
     rule_id?: number;
     schedule_id?: number;
-    school_id?: number;
+    org_id?: number;
     subject_id?: number;
     teacher_id?: number;
     updated_at?: string;
@@ -932,7 +934,7 @@ declare namespace API {
     object?: string;
     rule_id?: number;
     schedule_id?: number;
-    school_id?: number;
+    org_id?: number;
     subject_id?: number;
     teacher_id?: number;
     type?: string;
@@ -941,8 +943,8 @@ declare namespace API {
 
   type SubjectGroup = {
     name?: string;
-    /** 学校id */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     subject_group_id?: number;
     subjects?: Subject[];
   };
@@ -953,7 +955,7 @@ declare namespace API {
     mutex_subject_id?: number;
     rule_id?: number;
     schedule_id?: number;
-    school_id?: number;
+    org_id?: number;
     subject_id?: number;
     updated_at?: string;
   };
@@ -967,7 +969,7 @@ declare namespace API {
     period_of_day?: number;
     rule_id?: number;
     schedule_id?: number;
-    school_id?: number;
+    org_id?: number;
     subject_id?: number;
     teacher_id?: number;
     type?: string;
@@ -983,7 +985,7 @@ declare namespace API {
     period_of_day?: number;
     rule_id?: number;
     schedule_id?: number;
-    school_id?: number;
+    org_id?: number;
     subject_id?: number;
     teacher_id?: number;
     type?: string;
@@ -1010,16 +1012,16 @@ declare namespace API {
     main_subject?: number;
     name?: string;
     phone?: NullString;
-    /** 学校id */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     short_name?: string;
     teacher_id?: number;
   };
 
   type TeacherGroup = {
     name?: string;
-    /** 学校id */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     teacher_group_id?: number;
     teachers?: Teacher[];
   };
@@ -1031,7 +1033,7 @@ declare namespace API {
     periods?: string;
     rule_id?: number;
     schedule_id?: number;
-    school_id?: number;
+    org_id?: number;
     teacher_group_id?: number;
     teacher_id?: number;
     updated_at?: string;
@@ -1049,7 +1051,7 @@ declare namespace API {
     /** 每周几次连堂课 1连堂课=2节课 */
     num_connected_classes_per_week?: number;
     /** 年级id */
-    school_id?: number;
+    org_id?: number;
     /** 科目id */
     subject_id?: number;
     /** 单双周轮换科目 */
@@ -1083,7 +1085,7 @@ declare namespace API {
     periods: string;
     rule_id?: number;
     schedule_id?: number;
-    school_id?: number;
+    org_id?: number;
     subject_id?: number;
     teacher_id?: number;
   };
@@ -1132,8 +1134,8 @@ declare namespace API {
     num_night_classes?: number;
     /** 一周工作日, 默认:5天 */
     num_workdays?: number;
-    /** 学校id */
-    school_id?: number;
+    /** 组织id */
+    org_id?: number;
     /** 状态 */
     status?: 'pending' | 'running' | 'success' | 'failed' | 'completed' | 'published';
     /** 最后修改人用户uid */
@@ -1160,7 +1162,7 @@ declare namespace API {
     day_of_week: number;
     grade_id: number;
     schedule_id: number;
-    school_id: number;
+    org_id: number;
     subject_id: number;
     teacher_id?: number;
   };
@@ -1172,7 +1174,7 @@ declare namespace API {
     grade_id: number;
     object: 'subject' | 'teacher';
     schedule_id: number;
-    school_id: number;
+    org_id: number;
     subject_id?: number;
     teacher_id?: number;
     type: 'fixed' | 'min' | 'max';
@@ -1187,7 +1189,7 @@ declare namespace API {
     mutex_subject_id: number;
     rule_id: number;
     schedule_id: number;
-    school_id: number;
+    org_id: number;
     subject_id: number;
   };
 
@@ -1203,7 +1205,7 @@ declare namespace API {
     object: 'subject' | 'teacher';
     period_of_day: number;
     schedule_id: number;
-    school_id: number;
+    org_id: number;
     subject_id?: number;
     teacher_id?: number;
     type: 'fixed' | 'min' | 'max';
@@ -1211,7 +1213,7 @@ declare namespace API {
 
   type UpdateSubjectReq = {
     name?: string;
-    school_id?: number;
+    org_id?: number;
     /** 科目简称 */
     short_name?: string;
   };
@@ -1223,7 +1225,7 @@ declare namespace API {
     period_of_day: number;
     rule_id: number;
     schedule_id: number;
-    school_id: number;
+    org_id: number;
     subject_id?: number;
     teacher_id?: number;
     type: 'fixed' | 'min' | 'max';
@@ -1299,7 +1301,7 @@ declare namespace API {
     phone?: string;
     role?: string;
     school?: SchoolInfo;
-    school_id?: number;
+    org_id?: number;
     signature?: string;
     title?: string;
     uid?: number;

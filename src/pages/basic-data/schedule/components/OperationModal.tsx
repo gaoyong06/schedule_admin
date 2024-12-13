@@ -1,14 +1,14 @@
 import { ModalForm, ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
 import { Button, Result } from 'antd';
 import type { FC } from 'react';
-import type { BasicListItemDataType } from '../data';
+import type { ScheduleItemDataType } from '../data';
 import useStyles from '../style.style';
 type OperationModalProps = {
   done: boolean;
   open: boolean;
-  current: Partial<BasicListItemDataType> | undefined;
+  current: Partial<ScheduleItemDataType> | undefined;
   onDone: () => void;
-  onSubmit: (values: BasicListItemDataType) => void;
+  onSubmit: (values: ScheduleItemDataType) => void;
   children?: React.ReactNode;
 };
 const OperationModal: FC<OperationModalProps> = (props) => {
@@ -18,7 +18,7 @@ const OperationModal: FC<OperationModalProps> = (props) => {
     return null;
   }
   return (
-    <ModalForm<BasicListItemDataType>
+    <ModalForm<ScheduleItemDataType>
       open={open}
       title={done ? null : current ? '课表编辑' : '新建课表'}
       className={styles.standardListForm}
@@ -44,7 +44,7 @@ const OperationModal: FC<OperationModalProps> = (props) => {
       {!done ? (
         <>
           <ProFormText
-            name="title"
+            name="name"
             label="课表名称"
             rules={[
               {
@@ -56,200 +56,200 @@ const OperationModal: FC<OperationModalProps> = (props) => {
           />
 
           <ProFormSelect
-            name="numWorkdays"
+            name="num_workdays"
             label="工作日"
             tooltip="每周工作几天"
             rules={[{ required: true, message: '请选择工作日' }]}
             options={[
               {
-                value: '1',
+                value: 1,
                 label: '1天',
               },
               {
-                value: '2',
+                value: 2,
                 label: '2天',
               },
               {
-                value: '3',
+                value: 3,
                 label: '3天',
               },
               {
-                value: '4',
+                value: 4,
                 label: '4天',
               },
               {
-                value: '5',
+                value: 5,
                 label: '5天',
               },
               {
-                value: '6',
+                value: 6,
                 label: '6天',
               },
               {
-                value: '7',
+                value: 7,
                 label: '7天',
               },
             ]}
           />
           <ProFormSelect
-            name="numDaysOff"
+            name="num_days_off"
             label="假期"
             tooltip="每周休息几天"
             rules={[{ required: true, message: '请选择假期' }]}
             options={[
               {
-                value: '0',
+                value: 0,
                 label: '无',
               },
               {
-                value: '1',
+                value: 1,
                 label: '1天',
               },
               {
-                value: '2',
+                value: 2,
                 label: '2天',
               },
               {
-                value: '3',
+                value: 3,
                 label: '3天',
               },
               {
-                value: '4',
+                value: 4,
                 label: '4天',
               },
               {
-                value: '5',
+                value: 5,
                 label: '5天',
               },
               {
-                value: '6',
+                value: 6,
                 label: '6天',
               },
               {
-                value: '7',
+                value: 7,
                 label: '7天',
               },
             ]}
           />
 
           <ProFormSelect
-            name="numMorningReadingClasses"
+            name="num_morning_reading_classes"
             label="早读课时"
             tooltip="早读上几节课"
             rules={[{ required: true, message: '请选择早读课时' }]}
             options={[
               {
-                value: '0',
+                value: 0,
                 label: '无',
               },
               {
-                value: '1',
+                value: 1,
                 label: '1节课',
               },
               {
-                value: '2',
+                value: 2,
                 label: '2节课',
               },
               {
-                value: '3',
+                value: 3,
                 label: '3节课',
               },
               {
-                value: '4',
+                value: 4,
                 label: '4节课',
               },
             ]}
           />
 
           <ProFormSelect
-            name="numForenoonClasses"
+            name="num_forenoon_classes"
             label="上午课时"
             tooltip="上午几节课"
             rules={[{ required: true, message: '请选择上午课时' }]}
             options={[
               {
-                value: '0',
+                value: 0,
                 label: '无',
               },
               {
-                value: '1',
+                value: 1,
                 label: '1节课',
               },
               {
-                value: '2',
+                value: 2,
                 label: '2节课',
               },
               {
-                value: '3',
+                value: 3,
                 label: '3节课',
               },
               {
-                value: '4',
+                value: 4,
                 label: '4节课',
               },
               {
-                value: '5',
+                value: 5,
                 label: '5节课',
               },
             ]}
           />
 
           <ProFormSelect
-            name="numAfternoonClasses"
+            name="num_afternoon_classes"
             label="下午课时"
             tooltip="下午几节课"
             rules={[{ required: true, message: '请选择下午课时' }]}
             options={[
               {
-                value: '0',
+                value: 0,
                 label: '无',
               },
               {
-                value: '1',
+                value: 1,
                 label: '1节课',
               },
               {
-                value: '2',
+                value: 2,
                 label: '2节课',
               },
               {
-                value: '3',
+                value: 3,
                 label: '3节课',
               },
               {
-                value: '4',
+                value: 4,
                 label: '4节课',
               },
               {
-                value: '5',
+                value: 5,
                 label: '5节课',
               },
             ]}
           />
           <ProFormSelect
-            name="numNightClasses"
+            name="num_night_classes"
             label="晚自习课时"
             tooltip="晚自习几节课"
             rules={[{ required: true, message: '请选择晚自习课时' }]}
             options={[
               {
-                value: '0',
+                value: 0,
                 label: '无',
               },
               {
-                value: '1',
+                value: 1,
                 label: '1节课',
               },
               {
-                value: '2',
+                value: 2,
                 label: '2节课',
               },
               {
-                value: '3',
+                value: 3,
                 label: '3节课',
               },
               {
-                value: '4',
+                value: 4,
                 label: '4节课',
               },
             ]}

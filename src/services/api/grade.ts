@@ -61,7 +61,7 @@ export async function deleteGrade(
   });
 }
 
-/** 获取学校的年级列表 获取学校的年级列表 GET /api/v1/grades/school/${param0} */
+/** 获取组织的年级列表 获取组织的年级列表 GET /api/v1/grades/org/${param0} */
 export async function getGradesByUser(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.getGradesByUserParams,
@@ -69,7 +69,7 @@ export async function getGradesByUser(
 ) {
   const { school_id: param0, ...queryParams } = params;
   return request<API.Response & { data?: API.PageList & { list?: API.Grade[] } }>(
-    `/api/v1/grades/school/${param0}`,
+    `/api/v1/grades/org/${param0}`,
     {
       method: 'GET',
       params: {

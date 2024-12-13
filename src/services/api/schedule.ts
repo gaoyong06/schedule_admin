@@ -64,15 +64,15 @@ export async function deleteSchedule(
   });
 }
 
-/** 获取学校的课表方案列表 用于获取学校的课表方案列表 GET /api/v1/schedules/school/${param0} */
-export async function getSchedulesBySchool(
+/** 获取组织的课表方案列表 用于获取组织的课表方案列表 GET /api/v1/schedules/org/${param0} */
+export async function getSchedulesByOrg(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getSchedulesBySchoolParams,
+  params: API.getSchedulesByOrgParams,
   options?: { [key: string]: any },
 ) {
-  const { school_id: param0, ...queryParams } = params;
+  const { org_id: param0, ...queryParams } = params;
   return request<API.Response & { data?: API.PageList & { list?: API.Schedule[] } }>(
-    `/api/v1/schedules/school/${param0}`,
+    `/api/v1/schedules/org/${param0}`,
     {
       method: 'GET',
       params: {
