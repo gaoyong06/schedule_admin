@@ -106,7 +106,7 @@ export const ScheduleList: FC = () => {
   const { run: postRun } = useRequest(
     (method: string, params: any) => {
       if (method === 'delete') {
-        return deleteSchedule(params);
+        return deleteSchedule({ id: params.schedule_id });
       }
       if (method === 'update') {
         return updateSchedule({ id: params.schedule_id }, params);
@@ -118,7 +118,7 @@ export const ScheduleList: FC = () => {
       manual: true,
       onSuccess: (result, params) => {
         if (params[0] === 'delete') {
-          setList(list.filter((item) => item.schedule_id !== params[1].id));
+          setList(list.filter((item) => item.schedule_id !== params[1].schedule_id));
         } else if (params[0] === 'update') {
           setList(list.map((item) => (item.schedule_id === params[1].schedule_id ? result : item)));
         } else if (params[0] === 'add') {
@@ -141,8 +141,8 @@ export const ScheduleList: FC = () => {
     setCurrent(item);
   };
 
-  const deleteItem = (id: number) => {
-    postRun('delete', { id });
+  const deleteItem = (schedule_id: number) => {
+    postRun('delete', { schedule_id });
   };
 
   const editAndDelete = (key: string | number, currentItem: API.Schedule) => {
