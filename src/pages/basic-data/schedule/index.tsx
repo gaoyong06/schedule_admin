@@ -82,64 +82,82 @@ export const ScheduleList: FC = () => {
   const [done, setDone] = useState<boolean>(false);
   const [open, setVisible] = useState<boolean>(false);
   const [current, setCurrent] = useState<Partial<API.Schedule> | undefined>(undefined);
+  const [list, setList] = useState<API.Schedule[]>([]);
+
   const {
     data: listData,
     loading,
     mutate,
-  } = useRequest(() => {
-    return getSchedulesByUser({
-      uid: currentUser?.uid || 0,
-      page: 1,
-      page_size: 50,
-    });
-  });
+  } = useRequest(
+    () => {
+      return getSchedulesByUser({
+        uid: currentUser?.uid || 0,
+        page: 1,
+        page_size: 50,
+      });
+    },
+    {
+      onSuccess: (result) => {
+        setList(result.list);
+      },
+    },
+  );
+
   const { run: postRun } = useRequest(
     (method: string, params: any) => {
-      if (method === 'remove') {
-        return deleteSchedule(params.id);
+      if (method === 'delete') {
+        return deleteSchedule(params);
       }
       if (method === 'update') {
-        return updateSchedule(params.id, params);
+        return updateSchedule({ id: params.schedule_id }, params);
       }
       return createSchedule(params);
     },
     {
       // 表示请求不会自动执行，需要手动调用 postRun
       manual: true,
-      onSuccess: (result) => {
-        mutate(result);
+      onSuccess: (result, params) => {
+        if (params[0] === 'delete') {
+          setList(list.filter((item) => item.schedule_id !== params[1].id));
+        } else if (params[0] === 'update') {
+          setList(list.map((item) => (item.schedule_id === params[1].schedule_id ? result : item)));
+        } else if (params[0] === 'add') {
+          setList([...list, result]);
+        }
         setDone(true);
       },
     },
   );
-  const list = listData?.list || [];
+
   const paginationProps = {
     showSizeChanger: false,
     showQuickJumper: false,
     pageSize: 10,
     total: list.length,
   };
+
   const showEditModal = (item: API.Schedule) => {
     setVisible(true);
     setCurrent(item);
   };
+
   const deleteItem = (id: number) => {
-    postRun('remove', {
-      id,
-    });
+    postRun('delete', { id });
   };
+
   const editAndDelete = (key: string | number, currentItem: API.Schedule) => {
     if (key === 'edit') showEditModal(currentItem);
     else if (key === 'delete') {
       Modal.confirm({
-        title: '删除任务',
-        content: '确定删除该任务吗？',
+        title: '删除课表',
+        content: '确定删除该课表吗？',
         okText: '确认',
         cancelText: '取消',
         onOk: () => deleteItem(currentItem.schedule_id),
       });
     }
   };
+
   const extraContent = (
     <div>
       <Button
@@ -158,6 +176,7 @@ export const ScheduleList: FC = () => {
       </Button>
     </div>
   );
+
   const MoreBtn: React.FC<{
     item: API.Schedule;
   }> = ({ item }) => (
@@ -181,15 +200,18 @@ export const ScheduleList: FC = () => {
       </a>
     </Dropdown>
   );
+
   const handleDone = () => {
     setDone(false);
     setVisible(false);
     setCurrent({});
   };
+
   const handleSubmit = (values: API.Schedule) => {
     const method = values?.schedule_id ? 'update' : 'add';
     postRun(method, values);
   };
+
   return (
     <div>
       <PageContainer content="表单页用于向用户收集或验证信息，基础表单常见于数据项较少的表单场景。">
@@ -282,4 +304,5 @@ export const ScheduleList: FC = () => {
     </div>
   );
 };
+
 export default ScheduleList;
