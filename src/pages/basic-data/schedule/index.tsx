@@ -14,6 +14,7 @@ import {
 } from '../../../services/api/schedule';
 import OperationModal from './components/OperationModal';
 import useStyles from './style.style';
+import { message } from 'antd';
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
@@ -79,7 +80,6 @@ export const ScheduleList: FC = () => {
   const { currentUser } = initialState || {};
 
   const { styles } = useStyles();
-  const [done, setDone] = useState<boolean>(false);
   const [open, setVisible] = useState<boolean>(false);
   const [current, setCurrent] = useState<Partial<API.Schedule> | undefined>(undefined);
   const [list, setList] = useState<API.Schedule[]>([]);
@@ -121,10 +121,14 @@ export const ScheduleList: FC = () => {
           setList(list.filter((item) => item.schedule_id !== params[1].schedule_id));
         } else if (params[0] === 'update') {
           setList(list.map((item) => (item.schedule_id === params[1].schedule_id ? result : item)));
+          setDone(true);
         } else if (params[0] === 'add') {
           setList([...list, result]);
+          setDone(true);
+        } else {
+          console.error(params[0], ' action failed');
         }
-        setDone(true);
+        message.success('操作成功');
       },
     },
   );
@@ -204,7 +208,7 @@ export const ScheduleList: FC = () => {
   const handleDone = () => {
     setDone(false);
     setVisible(false);
-    setCurrent({});
+    setCurrent(undefined);
   };
 
   const handleSubmit = (values: API.Schedule) => {
