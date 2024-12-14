@@ -1,3 +1,4 @@
+// /schedule_admin/src/pages/basic-data/schedule/index.tsx
 import { createFromIconfontCN, DownOutlined, PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { useModel, useRequest } from '@umijs/max';
@@ -103,9 +104,11 @@ export const ScheduleList: FC = () => {
       return createSchedule(params);
     },
     {
+      // 表示请求不会自动执行，需要手动调用 postRun
       manual: true,
       onSuccess: (result) => {
         mutate(result);
+        setDone(true);
       },
     },
   );
@@ -184,7 +187,6 @@ export const ScheduleList: FC = () => {
     setCurrent({});
   };
   const handleSubmit = (values: API.Schedule) => {
-    setDone(true);
     const method = values?.schedule_id ? 'update' : 'add';
     postRun(method, values);
   };

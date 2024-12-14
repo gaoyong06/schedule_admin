@@ -1,14 +1,26 @@
+// /schedule_admin/src/pages/basic-data/schedule/components/OperationModal.tsx
 import { ModalForm, ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
 import { Button, Result } from 'antd';
 import type { FC } from 'react';
 import type { ScheduleItemDataType } from '../data';
 import useStyles from '../style.style';
 type OperationModalProps = {
+  // 表示操作是否已经完成。如果 done 为 true，模态框会显示操作成功的结果页面；如果 done 为 false，模态框会显示表单页面
   done: boolean;
+
+  // 控制模态框的显示和隐藏。如果 open 为 true，模态框会显示；如果 open 为 false，模态框会隐藏
   open: boolean;
+
+  // 表示当前正在编辑的课表数据。如果 current 有值，表示正在编辑一个已有的课表；如果 current 为 undefined，表示正在创建一个新的课表
   current: Partial<ScheduleItemDataType> | undefined;
+
+  // 操作完成后的回调函数。当用户点击“知道了”按钮时，会调用这个函数，通常用于关闭模态框或重置状态
   onDone: () => void;
+
+  // 表单提交时的回调函数。当用户提交表单时，会调用这个函数，并将表单数据作为参数传递给它
   onSubmit: (values: ScheduleItemDataType) => void;
+
+  // 模态框的触发元素。通常是一个按钮或链接，用户点击它时会打开模态框
   children?: React.ReactNode;
 };
 const OperationModal: FC<OperationModalProps> = (props) => {
@@ -270,7 +282,7 @@ const OperationModal: FC<OperationModalProps> = (props) => {
         <Result
           status="success"
           title="操作成功"
-          subTitle="一系列的信息描述，很短同样也可以带标点。"
+          // subTitle="一系列的信息描述，很短同样也可以带标点。"
           extra={
             <Button type="primary" onClick={onDone}>
               知道了

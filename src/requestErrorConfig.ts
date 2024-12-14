@@ -1,4 +1,5 @@
-﻿import type { RequestOptions } from '@@/plugin-request/request';
+﻿// /schedule_admin/src/requestErrorConfig.ts
+import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
 
@@ -110,7 +111,9 @@ export const errorConfig: RequestConfig = {
       const { data } = response as unknown as ResponseStructure;
 
       if (data?.success === false) {
-        message.error('请求失败！');
+        // message.error('请求失败！');
+        console.error('请求失败！');
+        console.log(data);
       }
       return response;
     },
