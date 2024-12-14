@@ -121,10 +121,10 @@ export const ScheduleList: FC = () => {
           setList(list.filter((item) => item.schedule_id !== params[1].schedule_id));
         } else if (params[0] === 'update') {
           setList(list.map((item) => (item.schedule_id === params[1].schedule_id ? result : item)));
-          setDone(true);
+          handleCancel();
         } else if (params[0] === 'add') {
           setList([...list, result]);
-          setDone(true);
+          handleCancel();
         } else {
           console.error(params[0], ' action failed');
         }
@@ -205,8 +205,7 @@ export const ScheduleList: FC = () => {
     </Dropdown>
   );
 
-  const handleDone = () => {
-    setDone(false);
+  const handleCancel = () => {
     setVisible(false);
     setCurrent(undefined);
   };
@@ -299,10 +298,9 @@ export const ScheduleList: FC = () => {
       </PageContainer>
 
       <OperationModal
-        done={done}
         open={open}
         current={current}
-        onDone={handleDone}
+        onCancel={handleCancel}
         onSubmit={handleSubmit}
       />
     </div>
