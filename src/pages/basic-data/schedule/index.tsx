@@ -15,6 +15,7 @@ import {
 import OperationModal from './components/OperationModal';
 import useStyles from './style.style';
 import { message } from 'antd';
+import { SCHEDULE_STATUS_LABELS } from '@/constants/schedule-status';
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
@@ -48,16 +49,36 @@ const Info: FC<{
   );
 };
 const ListContent = ({
-  data: { created_by, created_at, updated_at, status },
+  data: { created_by, created_nickname, created_at, updated_at, status },
 }: {
   data: API.Schedule;
 }) => {
   const { styles } = useStyles();
+
+  const getBadgeStatus = (status: string | undefined) => {
+    switch (status) {
+      case 'pending':
+        return 'default';
+      case 'running':
+        return 'processing';
+      case 'success':
+        return 'success';
+      case 'failed':
+        return 'error';
+      case 'completed':
+        return 'warning';
+      case 'published':
+        return 'default';
+      default:
+        return 'default';
+    }
+  };
+
   return (
     <div>
       <div className={styles.listContentItem}>
         <span>创建者</span>
-        <p>{created_by}</p>
+        <p>{created_nickname}</p>
       </div>
       <div className={styles.listContentItem}>
         <span>创建时间</span>
@@ -69,7 +90,7 @@ const ListContent = ({
       </div>
       <div className={styles.listContentItem}>
         <p>
-          <Badge status="processing" text="进行中" />
+          <Badge status={getBadgeStatus(status)} text={SCHEDULE_STATUS_LABELS[status]} />
         </p>
       </div>
     </div>
@@ -123,7 +144,7 @@ export const ScheduleList: FC = () => {
           setList(list.map((item) => (item.schedule_id === params[1].schedule_id ? result : item)));
           handleCancel();
         } else if (params[0] === 'add') {
-          setList([...list, result]);
+          setList([result, ...list]);
           handleCancel();
         } else {
           console.error(params[0], ' action failed');
@@ -285,9 +306,14 @@ export const ScheduleList: FC = () => {
                       </Avatar>
                     }
                     title={
-                      <a href={`/basic-data/schedule/detail/${item.schedule_id}`}>{item.name}</a>
+                      // <a href={`/basic-data/schedule/detail/${item.schedule_id}`}>{item.name}</a>
+                      item.name
                     }
-                    description={item.desc}
+                    description={
+                      <div className={styles.description} title={item.desc}>
+                        {item.desc}
+                      </div>
+                    }
                   />
                   <ListContent data={item} />
                 </List.Item>

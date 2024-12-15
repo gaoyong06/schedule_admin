@@ -825,19 +825,23 @@ declare namespace API {
     phone: string;
   };
 
+  // https://pro.ant.design/zh-CN/docs/request/
   type Response = {
-    /** 业务状态码 */
-    code?: number;
-    /** 返回数据 */
-    data?: any;
-    /** 返回消息 */
-    msg?: string;
+    success: boolean; // if request is success
+    data?: any; // response data
+    errorCode?: string; // code for errorType
+    errorMessage?: string; // message display to user
+    showType?: number; // error display type： 0 silent; 1 message.warn; 2 message.error; 4 notification; 9 page
+    traceId?: string; // Convenient for back-end Troubleshooting: unique request ID
+    host?: string; // onvenient for backend Troubleshooting: host of current access server
   };
 
   type Schedule = {
     schedule_id: number;
     /** 创建人用户uid */
     created_by?: number;
+    /** 创建人用户昵称 */
+    created_nickname?: string;
     /** 备注信息 */
     desc?: string;
     /** 课表名称, 如: 心远中学2023年第一学期课程表 */
@@ -860,6 +864,8 @@ declare namespace API {
     status?: 'pending' | 'running' | 'success' | 'failed' | 'completed' | 'published';
     /** 最后修改人用户uid */
     updated_by?: number;
+    /** 最后修改人用户昵称 */
+    updated_nickname?: string;
     created_at?: string;
     updated_at?: string;
   };

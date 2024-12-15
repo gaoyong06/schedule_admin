@@ -134,6 +134,13 @@ const useStyles = createStyles(({ token }) => {
       width: '100%',
       "[class^='title']": { marginBottom: '8px' },
     },
+    description: {
+      display: '-webkit-box',
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: 3,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
   };
 });
 
