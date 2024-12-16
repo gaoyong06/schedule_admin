@@ -21,14 +21,13 @@ import {
   getSubjectsByOrg,
   updateSubject,
 } from '../../../services/api/subject';
-import OperationModal from './components/OperationModal';
 
 /**
- * 添加科目
+ * 添加节点
  *
  * @param fields
  */
-const handleCreate = async (fields: API.Subject) => {
+const handleAdd = async (fields: API.Subject) => {
   const hide = message.loading('正在添加');
 
   try {
@@ -42,19 +41,20 @@ const handleCreate = async (fields: API.Subject) => {
     return false;
   }
 };
-
 /**
- * 更新科目
+ * 更新节点
  *
  * @param fields
  */
-const handleUpdate = async (fields: API.Subject) => {
+
+const handleUpdate = async (fields: FormValueType, currentRow?: API.Subject) => {
   const hide = message.loading('正在修改');
+
   try {
-    await updateSubject(
-      { id: fields.subject_id ?? 0 }, // 只传递 id 作为 params
-      fields, // 将 fields 作为 body 传递
-    );
+    await updateSubject({
+      id: currentRow?.subject_id ?? 0,
+      ...fields,
+    });
     hide();
     message.success('修改成功');
     return true;
@@ -64,35 +64,13 @@ const handleUpdate = async (fields: API.Subject) => {
     return false;
   }
 };
-
 /**
- * 删除科目
- *
- * @param fields
- */
-const handleDelete = async (fields: API.Subject) => {
-  const hide = message.loading('正在删除');
-  try {
-    await deleteSubject({
-      id: fields.subject_id ?? 0,
-    });
-    hide();
-    message.success('删除成功');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('删除失败，请重试');
-    return false;
-  }
-};
-
-/**
- * 批量删除科目
+ * 删除节点
  *
  * @param selectedRows
  */
 
-const handleBatchRemove = async (selectedRows: API.Subject[]) => {
+const handleRemove = async (selectedRows: API.Subject[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
 
@@ -111,16 +89,13 @@ const handleBatchRemove = async (selectedRows: API.Subject[]) => {
 };
 
 const SubjectList: React.FC = () => {
-  const [open, setVisible] = useState<boolean>(false);
-  // const [current, setCurrent] = useState<Partial<API.Schedule> | undefined>(undefined);
-
   /** 新建窗口的弹窗 */
-  // const [createModalVisible, handleModalVisible] = useState<boolean>(false);
+  const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   /** 分布更新窗口的弹窗 */
 
-  // const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
+  const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<Partial<API.Subject> | undefined>(undefined);
+  const [currentRow, setCurrentRow] = useState<API.Subject>();
   const [selectedRowsState, setSelectedRows] = useState<API.Subject[]>([]);
   /** 国际化配置 */
 
@@ -128,77 +103,24 @@ const SubjectList: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
 
-  const handleCancel = () => {
-    setVisible(false);
-    setCurrentRow(undefined);
-  };
-
-  // const method = values?.schedule_id ? 'update' : 'add';
-  // postRun(method, values);
-
-  // 新建,编辑,删除科目提交
-  const handleSubmit = async (method: 'create' | 'update' | 'delete', value: API.Subject) => {
-    // 定义操作方法的映射
-    const operationMap = {
-      create: handleCreate,
-      update: handleUpdate,
-      delete: handleDelete,
-    };
-
-    // 根据 method 选择对应的操作方法
-    const operation = operationMap[method];
-
-    if (!operation) {
-      console.error(`Unsupported operation: ${method}`);
-      return;
-    }
-
-    try {
-      // 执行操作
-      const success = await operation(value);
-
-      if (success) {
-        // 操作成功后，关闭弹窗并刷新列表
-        setVisible(false);
-        actionRef.current?.reload();
-      } else {
-        // 操作失败，提示用户
-        console.error(`Failed to ${method} subject`);
-      }
-    } catch (error) {
-      // 捕获异常并提示用户
-      console.error(`Error during ${method} operation: `, error);
-    }
-  };
-
-  // 新建科目弹窗
-  const showAddModal = () => {
-    setCurrentRow(undefined);
-    setVisible(true);
-  };
-
-  // 编辑科目弹窗
-  const showEditModal = (item: API.Subject) => {
-    setCurrentRow(item);
-    setVisible(true);
-  };
-
-  // 删除科目弹窗
-  const showDeleteModal = (item: API.Subject) => {
-    Modal.confirm({
-      title: '删除科目',
-      content: `确定删除 ${item.name} 吗？`,
-      okText: '确认',
-      cancelText: '取消',
-      onOk: () => handleSubmit('delete', item),
-    });
-  };
-
-  // const deleteItem = (subject_id: number) => {
-  //   // postRun('delete', { schedule_id });
-  // };
-
   const columns: ProColumns<API.Subject>[] = [
+    // {
+    //   title: '序号',
+    //   dataIndex: 'index',
+    //   tip: '',
+    //   render: (dom, entity) => {
+    //     return (
+    //       <a
+    //         onClick={() => {
+    //           setCurrentRow(entity);
+    //           setShowDetail(true);
+    //         }}
+    //       >
+    //         {dom}
+    //       </a>
+    //     );
+    //   },
+    // },
     {
       title: '科目名称',
       dataIndex: 'name',
@@ -216,20 +138,17 @@ const SubjectList: React.FC = () => {
       render: (_, record) => [
         <a
           key="update"
-          onClick={(e) => {
-            e.preventDefault();
-            showEditModal(record);
+          onClick={() => {
+            handleUpdateModalVisible(true);
+            setCurrentRow(record);
+
+            console.log('===== update ======');
+            console.log(record);
           }}
         >
           编辑
         </a>,
-        <a
-          key="delete"
-          onClick={(e) => {
-            e.preventDefault();
-            showDeleteModal(record);
-          }}
-        >
+        <a key="subscribeAlert" href="https://procomponents.ant.design/">
           删除
         </a>,
       ],
@@ -248,9 +167,7 @@ const SubjectList: React.FC = () => {
             type="primary"
             key="primary"
             onClick={() => {
-              // setCurrentRow(undefined);
-              // setVisible(true);
-              showAddModal();
+              handleModalVisible(true);
             }}
           >
             <PlusOutlined /> 新建
@@ -311,7 +228,7 @@ const SubjectList: React.FC = () => {
         >
           <Button
             onClick={async () => {
-              await handleBatchRemove(selectedRowsState);
+              await handleRemove(selectedRowsState);
               setSelectedRows([]);
               actionRef.current?.reloadAndRest?.();
             }}
@@ -321,13 +238,107 @@ const SubjectList: React.FC = () => {
         </FooterToolbar>
       )}
 
-      <OperationModal
-        open={open}
-        current={currentRow}
-        onCancel={handleCancel}
-        onSubmit={handleSubmit}
-        currentUser={currentUser}
-      />
+      {/* 新建科目 */}
+      <ModalForm
+        title="新建科目"
+        width="400px"
+        open={createModalVisible}
+        onVisibleChange={handleModalVisible}
+        onFinish={async (value) => {
+          const success = await handleAdd(value as API.Subject);
+          if (success) {
+            handleModalVisible(false);
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+          }
+        }}
+      >
+        <ProFormText name="org_id" initialValue={currentUser?.org_id || 0} hidden />
+        <ProFormText
+          label="科目名称"
+          rules={[
+            {
+              required: true,
+              message: '科目名称为不能为空',
+            },
+          ]}
+          width="md"
+          name="name"
+        />
+        <ProFormText
+          label="科目简称"
+          rules={[
+            {
+              message: '',
+            },
+          ]}
+          width="md"
+          name="short_name"
+        />
+      </ModalForm>
+
+      {/* <UpdateForm
+        onSubmit={async (value) => {
+          const success = await handleUpdate(value, currentRow);
+
+          if (success) {
+            handleUpdateModalVisible(false);
+            setCurrentRow(undefined);
+
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+          }
+        }}
+        onCancel={() => {
+          handleUpdateModalVisible(false);
+          setCurrentRow(undefined);
+        }}
+        updateModalVisible={updateModalVisible}
+        values={currentRow || {}}
+      /> */}
+
+      <ModalForm
+        title="编辑科目"
+        width="400px"
+        open={updateModalVisible}
+        onVisibleChange={handleUpdateModalVisible}
+        onFinish={async (value) => {
+          const success = await handleUpdate(value as API.Subject);
+          if (success) {
+            handleUpdateModalVisible(false);
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+          }
+          setCurrentRow(undefined);
+        }}
+        initialValues={{ ...currentRow, org_id: currentUser.org_id }}
+      >
+        {/* <ProFormText name="org_id" initialValue={currentUser?.org_id || 0} hidden /> */}
+        <ProFormText
+          label="科目名称"
+          rules={[
+            {
+              required: true,
+              message: '科目名称为不能为空',
+            },
+          ]}
+          width="md"
+          name="name"
+        />
+        <ProFormText
+          label="科目简称"
+          rules={[
+            {
+              message: '',
+            },
+          ]}
+          width="md"
+          name="short_name"
+        />
+      </ModalForm>
     </PageContainer>
   );
 };

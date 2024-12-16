@@ -315,9 +315,8 @@ declare namespace API {
   };
 
   type deleteSubjectParams = {
-    // TODO: 这里要修改
     /** 科目IDs */
-    ids: number[];
+    id: number[];
   };
 
   type deleteSubjectPeriodLimitRulesIdParams = {
