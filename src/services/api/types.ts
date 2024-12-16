@@ -315,8 +315,9 @@ declare namespace API {
   };
 
   type deleteSubjectParams = {
-    /** 科目ID */
-    id: number;
+    // TODO: 这里要修改
+    /** 科目IDs */
+    ids: number[];
   };
 
   type deleteSubjectPeriodLimitRulesIdParams = {
@@ -396,7 +397,7 @@ declare namespace API {
     /** 年级ID */
     grade_id: number;
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
   };
@@ -429,7 +430,7 @@ declare namespace API {
   type getFacilitiesByOrgParams = {
     uid: number;
     org_id: number;
-    page?: number;
+    current: number;
     page_size?: number;
   };
 
@@ -447,7 +448,7 @@ declare namespace API {
     /** 用户ID */
     org_id: number;
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
   };
@@ -460,7 +461,7 @@ declare namespace API {
   type getSchedulesByOrgParams = {
     org_id: number;
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
   };
@@ -468,7 +469,7 @@ declare namespace API {
   type getSchedulesByUserParams = {
     uid: number;
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
   };
@@ -482,7 +483,7 @@ declare namespace API {
     /** 用户ID */
     uid: number;
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
   };
@@ -494,7 +495,7 @@ declare namespace API {
 
   type getSubjectConnectedDayRulesParams = {
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
     /** 课表方案ID */
@@ -520,7 +521,7 @@ declare namespace API {
 
   type getSubjectDayLimitRulesParams = {
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
     /** 课表方案ID */
@@ -545,7 +546,7 @@ declare namespace API {
 
   type getSubjectGroupsByOrgParams = {
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
   };
@@ -582,7 +583,7 @@ declare namespace API {
 
   type getSubjectPeriodLimitRulesParams = {
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
     /** 课表方案ID */
@@ -632,8 +633,10 @@ declare namespace API {
   };
 
   type getSubjectsByOrgParams = {
+    /** 组织id */
+    org_id: number;
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
   };
@@ -645,7 +648,7 @@ declare namespace API {
 
   type getTasksParams = {
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
     /** 任务状态 (pending/running/success/failed/completed) */
@@ -654,7 +657,7 @@ declare namespace API {
 
   type getTeacherGroupsByOrgParams = {
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
   };
@@ -671,7 +674,7 @@ declare namespace API {
 
   type getTeacherRulesParams = {
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
     /** 课表方案ID */
@@ -688,7 +691,7 @@ declare namespace API {
 
   type getTeachersByOrgParams = {
     /** 页码 */
-    page?: number;
+    current: number;
     /** 每页大小 */
     page_size?: number;
   };
@@ -699,7 +702,7 @@ declare namespace API {
   };
 
   type Grade = {
-    eduStage?: EduStage;
+    edu_stage?: EduStage;
     grade_id?: number;
     name?: string;
     org_id?: number;
@@ -746,12 +749,19 @@ declare namespace API {
   };
 
   type Pagination = {
+    // /** 当前页码 */
+    // page: number;
+    // /** 每页数量 */
+    // page_size?: number;
+    // /** 总记录数 */
+    // total?: number;
+
     /** 当前页码 */
-    page?: number;
+    current: number;
     /** 每页数量 */
-    page_size?: number;
+    page_size: number;
     /** 总记录数 */
-    total?: number;
+    total: number;
   };
 
   type Province = {
@@ -907,12 +917,18 @@ declare namespace API {
   };
 
   type Subject = {
-    /** 科目名称 */
-    name?: string;
+    /**科目id*/
+    subject_id?: number;
     /** 组织id */
     org_id?: number;
+    /** 科目名称 */
+    name?: string;
     /** 科目简称 */
     short_name?: string;
+    /**创建时间*/
+    created_at?: string;
+    /**修改时间*/
+    updated_at?: string;
   };
 
   type SubjectConnectedDayRule = {
@@ -1201,7 +1217,7 @@ declare namespace API {
 
   type updateSubjectParams = {
     /** 科目ID */
-    subject_id: number;
+    id: number;
   };
 
   type UpdateSubjectPeriodLimitRuleReq = {

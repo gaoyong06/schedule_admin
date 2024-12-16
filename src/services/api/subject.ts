@@ -1,3 +1,4 @@
+// /chedule_admin/src/services/api/subject.ts
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
@@ -49,8 +50,8 @@ export async function updateSubject(
   body: API.UpdateSubjectReq,
   options?: { [key: string]: any },
 ) {
-  const { subject_id: param0, id: param1, ...queryParams } = params;
-  return request<API.Response & { data?: API.Subject }>(`/api/v1/subjects/${param1}`, {
+  const { id: param0, ...queryParams } = params;
+  return request<API.Response & { data?: API.Subject }>(`/api/v1/subjects/${param0}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -94,16 +95,12 @@ export async function getSubjectsByOrg(
   params: API.getSubjectsByOrgParams,
   options?: { [key: string]: any },
 ) {
-  const { school_id: param0, ...queryParams } = params;
+  const { org_id: param0, ...queryParams } = params;
   return request<API.Response & { data?: API.PageList & { list?: API.Subject[] } }>(
     `/api/v1/subjects/org/${param0}`,
     {
       method: 'GET',
       params: {
-        // page has a default value: 1
-        page: '1',
-        // page_size has a default value: 10
-        page_size: '10',
         ...queryParams,
       },
       ...(options || {}),

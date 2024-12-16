@@ -51,12 +51,12 @@ export default {
   'menu.editor.koni': '拓扑编辑器',
 
   // =========== 自定义 ===============
-  'menu.basic-data': '基础数据',
-  'menu.basic-data.schedule': '课表方案',
-  'menu.basic-data.subject': '科目设置',
-  'menu.basic-data.teacher': '教师设置',
-  'menu.basic-data.grade-class': '年级/班级设置',
-  'menu.basic-data.facility': '教学场地设置',
+  'menu.basic-data': '设置',
+  'menu.basic-data.schedule': '上课时间',
+  'menu.basic-data.subject': '科目',
+  'menu.basic-data.teacher': '教师',
+  'menu.basic-data.grade-class': '年级班级',
+  'menu.basic-data.facility': '教学场地',
 
   'menu.teaching-task': '课务安排',
   'menu.teaching-task.setting': '课程计划设置',

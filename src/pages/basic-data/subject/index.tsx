@@ -1,3 +1,4 @@
+// /schedule_admin/src/pages/basic-data/subject/index.tsx
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import {
@@ -13,19 +14,24 @@ import { Button, Drawer, Input, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
-import type { TableListItem, TableListPagination } from './data';
-import { addRule, removeRule, rule, updateRule } from './service';
+import { useModel, useRequest } from '@umijs/max';
+import {
+  createSubject,
+  deleteSubject,
+  getSubjectsByOrg,
+  updateSubject,
+} from '../../../services/api/subject';
+
 /**
  * 添加节点
  *
  * @param fields
  */
-
-const handleAdd = async (fields: TableListItem) => {
+const handleAdd = async (fields: API.Subject) => {
   const hide = message.loading('正在添加');
 
   try {
-    await addRule({ ...fields });
+    await createSubject({ ...fields });
     hide();
     message.success('添加成功');
     return true;
@@ -41,20 +47,20 @@ const handleAdd = async (fields: TableListItem) => {
  * @param fields
  */
 
-const handleUpdate = async (fields: FormValueType, currentRow?: TableListItem) => {
-  const hide = message.loading('正在配置');
+const handleUpdate = async (fields: FormValueType, currentRow?: API.Subject) => {
+  const hide = message.loading('正在修改');
 
   try {
-    await updateRule({
-      ...currentRow,
+    await updateSubject({
+      id: currentRow?.subject_id ?? 0,
       ...fields,
     });
     hide();
-    message.success('配置成功');
+    message.success('修改成功');
     return true;
   } catch (error) {
     hide();
-    message.error('配置失败请重试！');
+    message.error('修改失败请重试！');
     return false;
   }
 };
@@ -64,13 +70,13 @@ const handleUpdate = async (fields: FormValueType, currentRow?: TableListItem) =
  * @param selectedRows
  */
 
-const handleRemove = async (selectedRows: TableListItem[]) => {
+const handleRemove = async (selectedRows: API.Subject[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
 
   try {
-    await removeRule({
-      key: selectedRows.map((row) => row.key),
+    await deleteSubject({
+      ids: selectedRows.map((row) => row.subject_id ?? 0),
     });
     hide();
     message.success('删除成功，即将刷新');
@@ -88,83 +94,42 @@ const TableList: React.FC = () => {
   /** 分布更新窗口的弹窗 */
 
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
-  const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<TableListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>([]);
+  const [currentRow, setCurrentRow] = useState<API.Subject>();
+  const [selectedRowsState, setSelectedRows] = useState<API.Subject[]>([]);
   /** 国际化配置 */
 
-  const columns: ProColumns<TableListItem>[] = [
+  // 登录用户信息
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+
+  const columns: ProColumns<API.Subject>[] = [
+    // {
+    //   title: '序号',
+    //   dataIndex: 'index',
+    //   tip: '',
+    //   render: (dom, entity) => {
+    //     return (
+    //       <a
+    //         onClick={() => {
+    //           setCurrentRow(entity);
+    //           setShowDetail(true);
+    //         }}
+    //       >
+    //         {dom}
+    //       </a>
+    //     );
+    //   },
+    // },
     {
-      title: '规则名称',
+      title: '科目名称',
       dataIndex: 'name',
-      tip: '规则名称是唯一的 key',
-      render: (dom, entity) => {
-        return (
-          <a
-            onClick={() => {
-              setCurrentRow(entity);
-              setShowDetail(true);
-            }}
-          >
-            {dom}
-          </a>
-        );
-      },
+      tip: '',
     },
     {
-      title: '描述',
-      dataIndex: 'desc',
+      title: '科目简称',
+      dataIndex: 'short_name',
       valueType: 'textarea',
-    },
-    {
-      title: '服务调用次数',
-      dataIndex: 'callNo',
-      sorter: true,
-      hideInForm: true,
-      renderText: (val: string) => `${val}万`,
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      hideInForm: true,
-      valueEnum: {
-        0: {
-          text: '关闭',
-          status: 'Default',
-        },
-        1: {
-          text: '运行中',
-          status: 'Processing',
-        },
-        2: {
-          text: '已上线',
-          status: 'Success',
-        },
-        3: {
-          text: '异常',
-          status: 'Error',
-        },
-      },
-    },
-    {
-      title: '上次调度时间',
-      sorter: true,
-      dataIndex: 'updatedAt',
-      valueType: 'dateTime',
-      renderFormItem: (item, { defaultRender, ...rest }, form) => {
-        const status = form.getFieldValue('status');
-
-        if (`${status}` === '0') {
-          return false;
-        }
-
-        if (`${status}` === '3') {
-          return <Input {...rest} placeholder="请输入异常原因！" />;
-        }
-
-        return defaultRender(item);
-      },
     },
     {
       title: '操作',
@@ -188,14 +153,12 @@ const TableList: React.FC = () => {
   ];
 
   return (
-    <PageContainer content="表单页用于向用户收集或验证信息，基础表单常见于数据项较少的表单场景。">
-      <ProTable<TableListItem, TableListPagination>
-        headerTitle="查询表格"
+    <PageContainer content="设置课表中涉及的所有科目信息">
+      <ProTable<API.Subject, API.Pagination>
+        headerTitle="全部"
         actionRef={actionRef}
-        rowKey="key"
-        search={{
-          labelWidth: 120,
-        }}
+        rowKey="subject_id"
+        search={false}
         toolBarRender={() => [
           <Button
             type="primary"
@@ -207,7 +170,36 @@ const TableList: React.FC = () => {
             <PlusOutlined /> 新建
           </Button>,
         ]}
-        request={rule}
+        // https://procomponents.ant.design/components/table?current=1&pageSize=5#api
+        // params 是需要自带的参数
+        // 这个参数优先级更高，会覆盖查询表单的参数
+        // params={params}
+        request={async (
+          // 第一个参数 params 查询表单和 params 参数的结合
+          // 第一个参数中一定会有 pageSize 和  current ，这两个参数是 antd 的规范
+          params: T & {
+            pageSize: number;
+            current: number;
+          },
+          sort,
+          filter,
+        ) => {
+          // 这里需要返回一个 Promise,在返回之前你可以进行数据转化
+          // 如果需要转化参数可以在这里进行修改
+          const ret = await getSubjectsByOrg({
+            org_id: currentUser?.org_id || 0,
+            current: params.current,
+            page_size: params.pageSize,
+          });
+          return {
+            data: ret.data.list,
+            // success 请返回 true，
+            // 不然 table 会停止解析数据，即使有数据
+            success: ret.success,
+            // 不传会使用 data 的长度，如果是分页一定要传
+            total: ret.data.list.total,
+          };
+        }}
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -227,10 +219,7 @@ const TableList: React.FC = () => {
               >
                 {selectedRowsState.length}
               </a>{' '}
-              项 &nbsp;&nbsp;
-              <span>
-                服务调用次数总计 {selectedRowsState.reduce((pre, item) => pre + item.callNo!, 0)} 万
-              </span>
+              项
             </div>
           }
         >
@@ -243,16 +232,15 @@ const TableList: React.FC = () => {
           >
             批量删除
           </Button>
-          <Button type="primary">批量审批</Button>
         </FooterToolbar>
       )}
       <ModalForm
-        title="新建规则"
+        title="新建科目"
         width="400px"
         open={createModalVisible}
         onVisibleChange={handleModalVisible}
         onFinish={async (value) => {
-          const success = await handleAdd(value as TableListItem);
+          const success = await handleAdd(value as API.Subject);
           if (success) {
             handleModalVisible(false);
             if (actionRef.current) {
@@ -261,17 +249,29 @@ const TableList: React.FC = () => {
           }
         }}
       >
+        <ProFormText name="org_id" initialValue={currentUser?.org_id || 0} hidden />
         <ProFormText
+          label="科目名称"
           rules={[
             {
               required: true,
-              message: '规则名称为必填项',
+              message: '科目名称为不能为空',
             },
           ]}
           width="md"
           name="name"
         />
-        <ProFormTextArea width="md" name="desc" />
+        <ProFormText
+          label="科目简称"
+          rules={[
+            {
+              message: '',
+            },
+          ]}
+          width="md"
+          name="short_name"
+        />
+        {/* <ProFormTextArea width="md" name="desc" /> */}
       </ModalForm>
       <UpdateForm
         onSubmit={async (value) => {
@@ -293,30 +293,6 @@ const TableList: React.FC = () => {
         updateModalVisible={updateModalVisible}
         values={currentRow || {}}
       />
-
-      <Drawer
-        width={600}
-        open={showDetail}
-        onClose={() => {
-          setCurrentRow(undefined);
-          setShowDetail(false);
-        }}
-        closable={false}
-      >
-        {currentRow?.name && (
-          <ProDescriptions<TableListItem>
-            column={2}
-            title={currentRow?.name}
-            request={async () => ({
-              data: currentRow || {},
-            })}
-            params={{
-              id: currentRow?.name,
-            }}
-            columns={columns as ProDescriptionsItemProps<TableListItem>[]}
-          />
-        )}
-      </Drawer>
     </PageContainer>
   );
 };

@@ -15,11 +15,13 @@ type OperationModalProps = {
   onSubmit: (values: API.Schedule) => void;
   // 模态框的触发元素。通常是一个按钮或链接，用户点击它时会打开模态框
   children?: React.ReactNode;
+  // 当前登录用户的信息
+  currentUser: API.UserInfoResponse;
 };
 
 const OperationModal: FC<OperationModalProps> = (props) => {
   const { styles } = useStyles();
-  const { open, current, onCancel, onSubmit, children } = props;
+  const { open, current, onCancel, onSubmit, children, currentUser } = props;
 
   if (!open) {
     return null;
@@ -34,7 +36,7 @@ const OperationModal: FC<OperationModalProps> = (props) => {
       onFinish={async (values) => {
         onSubmit(values);
       }}
-      initialValues={current}
+      initialValues={{ ...current, org_id: currentUser.org_id }}
       submitter={{
         render: (_, dom) => dom,
       }}
@@ -45,6 +47,7 @@ const OperationModal: FC<OperationModalProps> = (props) => {
       }}
     >
       {current?.schedule_id && <ProFormText name="schedule_id" hidden />}
+      <ProFormText name="org_id" hidden />
       <ProFormText
         name="name"
         label="课表名称"

@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import {
   createSchedule,
   deleteSchedule,
-  getSchedulesByUser,
+  getSchedulesByOrg,
   updateSchedule,
 } from '../../../services/api/schedule';
 import OperationModal from './components/OperationModal';
@@ -49,7 +49,7 @@ const Info: FC<{
   );
 };
 const ListContent = ({
-  data: { created_by, created_nickname, created_at, updated_at, status },
+  data: { created_by, created_nickname, created_at, updated_at, status, name, desc },
 }: {
   data: API.Schedule;
 }) => {
@@ -111,9 +111,9 @@ export const ScheduleList: FC = () => {
     mutate,
   } = useRequest(
     () => {
-      return getSchedulesByUser({
-        uid: currentUser?.uid || 0,
-        page: 1,
+      return getSchedulesByOrg({
+        org_id: currentUser?.org_id || 0,
+        current: 1,
         page_size: 50,
       });
     },
@@ -238,12 +238,12 @@ export const ScheduleList: FC = () => {
 
   return (
     <div>
-      <PageContainer content="表单页用于向用户收集或验证信息，基础表单常见于数据项较少的表单场景。">
+      <PageContainer content="设置每周的上课天数，每天的上课节数">
         <div className={styles.standardList}>
           <Card
             className={styles.listCard}
             bordered={false}
-            title="基本列表"
+            title="全部"
             style={{
               marginTop: 24,
             }}
@@ -328,6 +328,7 @@ export const ScheduleList: FC = () => {
         current={current}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
+        currentUser={currentUser}
       />
     </div>
   );
