@@ -78,7 +78,10 @@ export async function postApiV1SubjectsBatch(
 }
 
 /** 批量删除科目 用于批量删除现有的科目 DELETE /api/v1/subjects/batch */
-export async function batchDeleteSubjects(body: number[], options?: { [key: string]: any }) {
+export async function batchDeleteSubjects(
+  body: API.BatchDeleteSubjectsReq,
+  options?: { [key: string]: any },
+) {
   return request<API.Response>('/api/v1/subjects/batch', {
     method: 'DELETE',
     headers: {

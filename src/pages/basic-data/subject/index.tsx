@@ -1,25 +1,15 @@
 // /schedule_admin/src/pages/basic-data/subject/index.tsx
-import { PlusOutlined, DownOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
-import {
-  FooterToolbar,
-  ModalForm,
-  PageContainer,
-  ProDescriptions,
-  ProFormText,
-  ProFormTextArea,
-  ProTable,
-} from '@ant-design/pro-components';
-import { Button, Drawer, Input, message, Dropdown, Modal } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { FooterToolbar, PageContainer, ProTable } from '@ant-design/pro-components';
+import { Button, message, Modal } from 'antd';
 import React, { useRef, useState } from 'react';
-import type { FormValueType } from './components/UpdateForm';
-import UpdateForm from './components/UpdateForm';
-import { useModel, useRequest } from '@umijs/max';
+import { useModel } from '@umijs/max';
 import {
   createSubject,
-  deleteSubject,
   getSubjectsByOrg,
   updateSubject,
+  batchDeleteSubjects,
 } from '../../../services/api/subject';
 import OperationModal from './components/OperationModal';
 
@@ -66,15 +56,18 @@ const handleUpdate = async (fields: API.Subject) => {
 };
 
 /**
- * 删除科目
+ * 批量删除科目
  *
- * @param fields
+ * @param selectedRows
  */
-const handleDelete = async (fields: API.Subject) => {
+
+const handleBatchDelete = async (selectedRows: API.Subject[]) => {
   const hide = message.loading('正在删除');
+  if (!selectedRows) return true;
+
   try {
-    await deleteSubject({
-      id: fields.subject_id ?? 0,
+    await batchDeleteSubjects({
+      subject_ids: selectedRows.map((row) => row.subject_id ?? 0),
     });
     hide();
     message.success('删除成功');
@@ -86,39 +79,8 @@ const handleDelete = async (fields: API.Subject) => {
   }
 };
 
-/**
- * 批量删除科目
- *
- * @param selectedRows
- */
-
-const handleBatchRemove = async (selectedRows: API.Subject[]) => {
-  const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
-
-  try {
-    await deleteSubject({
-      ids: selectedRows.map((row) => row.subject_id ?? 0),
-    });
-    hide();
-    message.success('删除成功，即将刷新');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('删除失败，请重试');
-    return false;
-  }
-};
-
 const SubjectList: React.FC = () => {
   const [open, setVisible] = useState<boolean>(false);
-  // const [current, setCurrent] = useState<Partial<API.Schedule> | undefined>(undefined);
-
-  /** 新建窗口的弹窗 */
-  // const [createModalVisible, handleModalVisible] = useState<boolean>(false);
-  /** 分布更新窗口的弹窗 */
-
-  // const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<Partial<API.Subject> | undefined>(undefined);
   const [selectedRowsState, setSelectedRows] = useState<API.Subject[]>([]);
@@ -128,76 +90,76 @@ const SubjectList: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
 
+  // 新建,编辑弹窗点击取消按钮
   const handleCancel = () => {
     setVisible(false);
     setCurrentRow(undefined);
   };
 
-  // const method = values?.schedule_id ? 'update' : 'add';
-  // postRun(method, values);
-
-  // 新建,编辑,删除科目提交
-  const handleSubmit = async (method: 'create' | 'update' | 'delete', value: API.Subject) => {
-    // 定义操作方法的映射
-    const operationMap = {
-      create: handleCreate,
-      update: handleUpdate,
-      delete: handleDelete,
-    };
-
-    // 根据 method 选择对应的操作方法
-    const operation = operationMap[method];
-
-    if (!operation) {
-      console.error(`Unsupported operation: ${method}`);
+  // 新建,编辑,删除科目提交(新建,编辑是单个, 删除是批量)
+  const handleSubmit = async (
+    method: 'create' | 'update' | 'delete',
+    value: API.Subject | API.Subject[],
+    isSelectedRows: boolean,
+  ) => {
+    if (method === 'delete' && Array.isArray(value)) {
+      // 批量删除时选中的行
+      if (isSelectedRows) {
+        await handleBatchDelete(value);
+        setSelectedRows([]);
+        actionRef.current?.reloadAndRest?.();
+      }
+    } else if (method === 'create') {
+      await handleCreate(value as API.Subject);
+    } else if (method === 'update') {
+      await handleUpdate(value as API.Subject);
+    } else {
+      console.error('Unsupported method:', method);
       return;
     }
 
-    try {
-      // 执行操作
-      const success = await operation(value);
-
-      if (success) {
-        // 操作成功后，关闭弹窗并刷新列表
-        setVisible(false);
-        actionRef.current?.reload();
-      } else {
-        // 操作失败，提示用户
-        console.error(`Failed to ${method} subject`);
-      }
-    } catch (error) {
-      // 捕获异常并提示用户
-      console.error(`Error during ${method} operation: `, error);
+    if (method === 'create' || method === 'update') {
+      // 关闭弹窗
+      setVisible(false);
+      // 刷新列表
+      actionRef.current?.reload();
     }
   };
 
   // 新建科目弹窗
-  const showAddModal = () => {
+  const showCreateModal = () => {
     setCurrentRow(undefined);
     setVisible(true);
   };
 
   // 编辑科目弹窗
-  const showEditModal = (item: API.Subject) => {
+  const showUpdateModal = (item: API.Subject) => {
     setCurrentRow(item);
     setVisible(true);
   };
 
-  // 删除科目弹窗
-  const showDeleteModal = (item: API.Subject) => {
+  // 删除科目弹窗(单个,或批量删除)
+  const showDeleteModal = (items: API.Subject | API.Subject[], isSelectedRows: boolean) => {
+    const itemsArray = Array.isArray(items) ? items : [items];
+    const itemsCount = itemsArray.length;
+    let content: string;
+
+    if (itemsCount === 1) {
+      content = `确定删除 ${itemsArray[0].name} 吗？`;
+    } else {
+      content = `确定删除所选的 ${itemsCount} 个科目吗？`;
+    }
+
     Modal.confirm({
       title: '删除科目',
-      content: `确定删除 ${item.name} 吗？`,
+      content: content,
       okText: '确认',
       cancelText: '取消',
-      onOk: () => handleSubmit('delete', item),
+      onOk: () => handleSubmit('delete', itemsArray, isSelectedRows),
     });
   };
 
-  // const deleteItem = (subject_id: number) => {
-  //   // postRun('delete', { schedule_id });
-  // };
-
+  // 列表显示的行
   const columns: ProColumns<API.Subject>[] = [
     {
       title: '科目名称',
@@ -218,7 +180,7 @@ const SubjectList: React.FC = () => {
           key="update"
           onClick={(e) => {
             e.preventDefault();
-            showEditModal(record);
+            showUpdateModal(record);
           }}
         >
           编辑
@@ -227,7 +189,7 @@ const SubjectList: React.FC = () => {
           key="delete"
           onClick={(e) => {
             e.preventDefault();
-            showDeleteModal(record);
+            showDeleteModal(record, false);
           }}
         >
           删除
@@ -248,9 +210,7 @@ const SubjectList: React.FC = () => {
             type="primary"
             key="primary"
             onClick={() => {
-              // setCurrentRow(undefined);
-              // setVisible(true);
-              showAddModal();
+              showCreateModal();
             }}
           >
             <PlusOutlined /> 新建
@@ -309,15 +269,7 @@ const SubjectList: React.FC = () => {
             </div>
           }
         >
-          <Button
-            onClick={async () => {
-              await handleBatchRemove(selectedRowsState);
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            批量删除
-          </Button>
+          <Button onClick={() => showDeleteModal(selectedRowsState, true)}>批量删除</Button>
         </FooterToolbar>
       )}
 

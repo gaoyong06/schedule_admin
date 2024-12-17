@@ -3,6 +3,10 @@ declare namespace API {
     subjects: CreateSubjectReq[];
   };
 
+  type BatchDeleteSubjectsReq = {
+    subject_ids: number[];
+  };
+
   type BatchCreateTeacherReq = {
     subjects: CreateTeacherReq[];
   };
