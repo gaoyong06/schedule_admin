@@ -97,35 +97,35 @@ const SubjectList: React.FC = () => {
   };
 
   // 表单提交
-  // 新建,编辑,删除科目提交(新建,编辑是单个, 删除是批量)
-  const handleSubmit = async (
-    method: 'create' | 'update' | 'delete',
-    value: API.Subject | API.Subject[],
-
-    // 批量删除时：会选中多个行,这里标记是否有多个行被选中
-    isSelectedRows: boolean,
-  ) => {
-    if (method === 'delete' && Array.isArray(value)) {
-      await handleBatchDelete(value);
-      // 批量删除时选中的行
-      if (isSelectedRows) {
-        setSelectedRows([]);
-        actionRef.current?.reloadAndRest?.();
-      }
-    } else if (method === 'create') {
-      await handleCreate(value as API.Subject);
+  // 新建,编辑科目提交
+  const handleSubmitCreateOrUpdate = async (method: 'create' | 'update', value: API.Subject) => {
+    if (method === 'create') {
+      await handleCreate(value);
     } else if (method === 'update') {
-      await handleUpdate(value as API.Subject);
+      await handleUpdate(value);
     } else {
       console.error('Unsupported method:', method);
       return;
     }
 
-    // 创建,编辑,删除单个项时需要执行下面的操作
     // 关闭弹窗
     setVisible(false);
     // 刷新列表
     actionRef.current?.reload();
+  };
+
+  // 表单提交
+  // 删除科目提交(单个或批量)
+  const handleSubmitDelete = async (values: API.Subject[], isSelectedRows: boolean) => {
+    await handleBatchDelete(values);
+    // 批量删除时选中的行
+    if (isSelectedRows) {
+      setSelectedRows([]);
+      actionRef.current?.reloadAndRest?.();
+    } else {
+      // 刷新列表
+      actionRef.current?.reload();
+    }
   };
 
   // 新建科目弹窗
@@ -157,12 +157,17 @@ const SubjectList: React.FC = () => {
       content: content,
       okText: '确认',
       cancelText: '取消',
-      onOk: () => handleSubmit('delete', itemsArray, isSelectedRows),
+      onOk: () => handleSubmitDelete(itemsArray, isSelectedRows),
     });
   };
 
   // 列表显示的行
   const columns: ProColumns<API.Subject>[] = [
+    {
+      title: '序号',
+      dataIndex: 'index',
+      valueType: 'index',
+    },
     {
       title: '科目名称',
       dataIndex: 'name',
@@ -207,6 +212,7 @@ const SubjectList: React.FC = () => {
         actionRef={actionRef}
         rowKey="subject_id"
         search={false}
+        options={false}
         toolBarRender={() => [
           <Button
             type="primary"
@@ -279,7 +285,7 @@ const SubjectList: React.FC = () => {
         open={open}
         current={currentRow}
         onCancel={handleCancel}
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmitCreateOrUpdate}
         currentUser={currentUser}
       />
     </PageContainer>

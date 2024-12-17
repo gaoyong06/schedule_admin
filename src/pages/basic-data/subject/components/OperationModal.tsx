@@ -11,7 +11,7 @@ type OperationModalProps = {
   // 点击取消
   onCancel: () => void;
   // 表单提交时的回调函数。当用户提交表单时，会调用这个函数，并将表单数据和操作类型（新建或编辑）作为参数传递给它
-  onSubmit: (method: 'create' | 'update' | 'delete', values: API.Subject | API.Subject[]) => void;
+  onSubmit: (method: 'create' | 'update', values: API.Subject) => void;
   // 模态框的触发元素。通常是一个按钮或链接，用户点击它时会打开模态框
   children?: React.ReactNode;
   // 当前登录用户的信息
