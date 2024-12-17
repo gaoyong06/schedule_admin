@@ -103,9 +103,9 @@ const SubjectList: React.FC = () => {
     isSelectedRows: boolean,
   ) => {
     if (method === 'delete' && Array.isArray(value)) {
+      await handleBatchDelete(value);
       // 批量删除时选中的行
       if (isSelectedRows) {
-        await handleBatchDelete(value);
         setSelectedRows([]);
         actionRef.current?.reloadAndRest?.();
       }
@@ -118,12 +118,11 @@ const SubjectList: React.FC = () => {
       return;
     }
 
-    if (method === 'create' || method === 'update') {
-      // 关闭弹窗
-      setVisible(false);
-      // 刷新列表
-      actionRef.current?.reload();
-    }
+    // 创建,编辑,删除单个项时需要执行下面的操作
+    // 关闭弹窗
+    setVisible(false);
+    // 刷新列表
+    actionRef.current?.reload();
   };
 
   // 新建科目弹窗
