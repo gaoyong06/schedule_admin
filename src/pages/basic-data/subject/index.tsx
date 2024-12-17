@@ -96,10 +96,13 @@ const SubjectList: React.FC = () => {
     setCurrentRow(undefined);
   };
 
+  // 表单提交
   // 新建,编辑,删除科目提交(新建,编辑是单个, 删除是批量)
   const handleSubmit = async (
     method: 'create' | 'update' | 'delete',
     value: API.Subject | API.Subject[],
+
+    // 批量删除时：会选中多个行,这里标记是否有多个行被选中
     isSelectedRows: boolean,
   ) => {
     if (method === 'delete' && Array.isArray(value)) {
