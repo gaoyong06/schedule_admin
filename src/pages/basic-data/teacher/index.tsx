@@ -28,7 +28,7 @@ const handleCreate = async (fields: API.Teacher) => {
     return true;
   } catch (error) {
     hide();
-    message.error('添加失败请重试！');
+    // message.error('添加失败请重试！');
     return false;
   }
 };
@@ -182,6 +182,19 @@ const TeacherList: React.FC = () => {
       title: '主授科目',
       dataIndex: 'main_subject',
       tip: '',
+      render: (_, record) => {
+        // 根据 main_subject 的值返回对应的文字
+        const subjectMap: { [key: number]: string } = {
+          0: '-',
+          1: '语文',
+          2: '数学',
+          3: '英语',
+          4: '物理',
+          5: '化学',
+          // 其他科目...
+        };
+        return subjectMap[record?.main_subject ?? 0] || '-';
+      },
     },
     {
       title: '手机号码',
@@ -192,6 +205,15 @@ const TeacherList: React.FC = () => {
       title: '在职状态',
       dataIndex: 'is_active',
       tip: '',
+      render: (_, record) => {
+        // 根据 is_active 的值返回对应的文字
+        const statusMap: { [key: number]: string } = {
+          0: '-',
+          1: '在职',
+          2: '离职',
+        };
+        return statusMap[record?.is_active ?? 0] || '-';
+      },
     },
     {
       title: '操作',

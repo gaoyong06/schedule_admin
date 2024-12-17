@@ -74,6 +74,9 @@ export const errorConfig: RequestConfig = {
       } else if (error.response) {
         // Axios 的错误
         // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
+        // 重要！重要！重要！
+        // 如果API响应的状态码,超出2xx（例如：4xx,5xx）就会toast这个错误
+        // 如果要toast error_message的内容，需要将API http status修改为2xx
         message.error(`Response status:${error.response.status}`);
       } else if (error.request) {
         // 请求已经成功发起，但没有收到响应
