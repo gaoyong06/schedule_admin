@@ -693,6 +693,8 @@ declare namespace API {
   };
 
   type getTeachersByOrgParams = {
+    /** 组织ID */
+    org_id: number;
     /** 页码 */
     current: number;
     /** 每页大小 */
@@ -1276,7 +1278,7 @@ declare namespace API {
 
   type updateTeacherParams = {
     /** 教师ID */
-    teacher_id: number;
+    id: number;
   };
 
   type UpdateTeacherReq = {

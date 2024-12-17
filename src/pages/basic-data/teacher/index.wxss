@@ -1,7 +1,0 @@
-.teacher-setting {
-  padding: 20px;
-}
-.teacher-setting .ant-btn {
-  margin-right: 10px;
-  margin-bottom: 10px;
-}

@@ -1,5 +1,5 @@
 // /schedule_admin/src/pages/basic-data/schedule/components/OperationModal.tsx
-import { ModalForm, ProFormText } from '@ant-design/pro-components';
+import { ModalForm, ProFormText, ProFormSelect } from '@ant-design/pro-components';
 import type { FC } from 'react';
 
 type OperationModalProps = {
@@ -27,7 +27,7 @@ const OperationModal: FC<OperationModalProps> = (props) => {
   return (
     <ModalForm<API.Subject>
       open={open}
-      title={current ? '科目编辑' : '新建科目'}
+      title={current ? '教师编辑' : '添加教师'}
       width={380}
       onFinish={async (values) => {
         const method = current ? 'update' : 'create';
@@ -46,25 +46,54 @@ const OperationModal: FC<OperationModalProps> = (props) => {
       {current?.subject_id && <ProFormText name="subject_id" hidden />}
       <ProFormText name="org_id" hidden />
       <ProFormText
-        label="科目名称"
+        label="姓名"
         rules={[
           {
             required: true,
-            message: '科目名称为不能为空',
+            message: '教师信息为不能为空',
           },
         ]}
         width="md"
         name="name"
       />
       <ProFormText
-        label="科目简称"
+        label="教师简称"
+        rules={[
+          {
+            message: '教师简称为了便于在课程表单元格上显示',
+          },
+        ]}
+        width="md"
+        name="short_name"
+      />
+      <ProFormText
+        label="主授科目"
         rules={[
           {
             message: '',
           },
         ]}
         width="md"
-        name="short_name"
+        name="main_subject"
+      />
+      <ProFormText
+        label="手机号码"
+        rules={[
+          {
+            message: '',
+          },
+        ]}
+        width="md"
+        name="phone"
+      />
+      <ProFormSelect
+        name="is_active"
+        width="md"
+        label="在职状态"
+        valueEnum={{
+          0: '离职',
+          1: '在职',
+        }}
       />
     </ModalForm>
   );

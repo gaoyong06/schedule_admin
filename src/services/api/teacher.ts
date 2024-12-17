@@ -49,8 +49,8 @@ export async function updateTeacher(
   body: API.UpdateTeacherReq,
   options?: { [key: string]: any },
 ) {
-  const { teacher_id: param0, id: param1, ...queryParams } = params;
-  return request<API.Response & { data?: API.Teacher }>(`/api/v1/teachers/${param1}`, {
+  const { id: param0, ...queryParams } = params;
+  return request<API.Response & { data?: API.Teacher }>(`/api/v1/teachers/${param0}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -97,16 +97,12 @@ export async function getTeachersByOrg(
   params: API.getTeachersByOrgParams,
   options?: { [key: string]: any },
 ) {
-  const { school_id: param0, ...queryParams } = params;
+  const { org_id: param0, ...queryParams } = params;
   return request<API.Response & { data?: API.PageList & { list?: API.Teacher[] } }>(
     `/api/v1/teachers/org/${param0}`,
     {
       method: 'GET',
       params: {
-        // page has a default value: 1
-        page: '1',
-        // page_size has a default value: 10
-        page_size: '10',
         ...queryParams,
       },
       ...(options || {}),
