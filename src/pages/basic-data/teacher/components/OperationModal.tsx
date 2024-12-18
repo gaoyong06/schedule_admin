@@ -37,9 +37,15 @@ const OperationModal: FC<OperationModalProps> = (props) => {
         values.is_active = Number(values.is_active);
         onSubmit(method, values);
       }}
+      // ProFormSelect的内容回显,注意这里的数字也字符串的转换
+      // API接口需要数字类型,ProFormSelect里面需要字符串类型
+      // 两侧需要转换一下
+      // https://www.codeleading.com/article/68006611014/
       initialValues={{
         ...current,
         org_id: currentUser?.org_id,
+        main_subject: String(current?.main_subject),
+        is_active: String(current?.is_active),
       }}
       submitter={{
         render: (_, dom) => dom,
@@ -101,8 +107,8 @@ const OperationModal: FC<OperationModalProps> = (props) => {
         width="md"
         label="在职状态"
         valueEnum={{
-          1: '在职',
-          2: '离职',
+          '1': '在职',
+          '2': '离职',
         }}
       />
     </ModalForm>
