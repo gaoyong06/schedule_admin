@@ -2,7 +2,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { FooterToolbar, PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, message, Modal } from 'antd';
+import { Button, Badge, message, Modal } from 'antd';
 import React, { useRef, useState } from 'react';
 import { useModel } from '@umijs/max';
 import {
@@ -167,11 +167,17 @@ const TeacherList: React.FC = () => {
       title: '序号',
       dataIndex: 'index',
       valueType: 'index',
+      render: (_, __, index) => {
+        return <span style={{ color: '#999' }}>{index + 1}</span>; // 序号默认从 1 开始
+      },
     },
     {
       title: '姓名',
       dataIndex: 'name',
       tip: '',
+      render: (_, record) => {
+        return <span style={{ fontWeight: 600 }}>{record.name}</span>;
+      },
     },
     {
       title: '教师简称',
@@ -206,13 +212,22 @@ const TeacherList: React.FC = () => {
       dataIndex: 'is_active',
       tip: '',
       render: (_, record) => {
-        // 根据 is_active 的值返回对应的文字
-        const statusMap: { [key: number]: string } = {
-          0: '-',
-          1: '在职',
-          2: '离职',
+        const statusMap: {
+          [key: number]: {
+            status: 'default' | 'success' | 'error' | 'warning' | 'processing';
+            text: string;
+          };
+        } = {
+          0: { status: 'default', text: '-' },
+          1: { status: 'processing', text: '在职' },
+          2: { status: 'default', text: '离职' },
         };
-        return statusMap[record?.is_active ?? 0] || '-';
+        return (
+          <Badge
+            status={statusMap[record?.is_active ?? 0].status}
+            text={statusMap[record?.is_active ?? 0].text}
+          />
+        );
       },
     },
     {

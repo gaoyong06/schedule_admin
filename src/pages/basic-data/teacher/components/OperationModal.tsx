@@ -42,10 +42,10 @@ const OperationModal: FC<OperationModalProps> = (props) => {
       // 两侧需要转换一下
       // https://www.codeleading.com/article/68006611014/
       initialValues={{
-        ...current,
+        ...(current ?? {}),
         org_id: currentUser?.org_id,
-        main_subject: String(current?.main_subject),
-        is_active: String(current?.is_active),
+        main_subject: current ? String(current.main_subject) : '',
+        is_active: current ? String(current.is_active) : '',
       }}
       submitter={{
         render: (_, dom) => dom,
