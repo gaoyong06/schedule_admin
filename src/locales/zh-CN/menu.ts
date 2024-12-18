@@ -55,7 +55,8 @@ export default {
   'menu.basic-data.schedule': '上课时间',
   'menu.basic-data.subject': '科目',
   'menu.basic-data.teacher': '教师',
-  'menu.basic-data.grade-class': '年级班级',
+  'menu.basic-data.grade': '年级',
+  'menu.basic-data.class': '班级',
   'menu.basic-data.facility': '教学场地',
 
   'menu.teaching-task': '课务安排',

@@ -7,6 +7,10 @@ declare namespace API {
     subject_ids: number[];
   };
 
+  type BatchDeleteGradesReq = {
+    grade_ids: number[];
+  };
+
   type BatchCreateTeacherReq = {
     subjects: CreateTeacherReq[];
   };
@@ -405,6 +409,19 @@ declare namespace API {
     page_size?: number;
   };
 
+  type getClassesByOrgParams = {
+    /** 组织ID */
+    org_id: number;
+    /** 页码 */
+    current: number;
+    /** 每页大小 */
+    page_size?: number;
+  };
+
+  type BatchDeleteClassesReq = {
+    class_ids: number[];
+  };
+
   type getClassParams = {
     /** 班级ID */
     id: number;
@@ -448,6 +465,15 @@ declare namespace API {
   };
 
   type getGradesByUserParams = {
+    /** 用户ID */
+    org_id: number;
+    /** 页码 */
+    current: number;
+    /** 每页大小 */
+    page_size?: number;
+  };
+
+  type getGradesByOrgParams = {
     /** 用户ID */
     org_id: number;
     /** 页码 */

@@ -87,9 +87,14 @@ export default [
         component: './basic-data/teacher',
       },
       {
-        name: 'grade-class',
-        path: '/basic-data/grade-class',
-        component: './basic-data/grade-class',
+        name: 'grade',
+        path: '/basic-data/grade',
+        component: './basic-data/grade',
+      },
+      {
+        name: 'class',
+        path: '/basic-data/class',
+        component: './basic-data/class',
       },
       {
         name: 'facility',

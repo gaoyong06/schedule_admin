@@ -61,13 +61,28 @@ export async function deleteGrade(
   });
 }
 
+/** 批量删除年级 用于批量删除现有的年级 DELETE /api/v1/grades/batch */
+export async function batchDeleteGrades(
+  body: API.BatchDeleteGradesReq,
+  options?: { [key: string]: any },
+) {
+  return request<API.Response>('/api/v1/grades/batch', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** 获取组织的年级列表 获取组织的年级列表 GET /api/v1/grades/org/${param0} */
-export async function getGradesByUser(
+export async function getGradesByOrg(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.getGradesByUserParams,
   options?: { [key: string]: any },
 ) {
-  const { school_id: param0, ...queryParams } = params;
+  const { org_id: param0, ...queryParams } = params;
   return request<API.Response & { data?: API.PageList & { list?: API.Grade[] } }>(
     `/api/v1/grades/org/${param0}`,
     {
