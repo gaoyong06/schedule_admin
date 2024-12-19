@@ -203,6 +203,11 @@ const ClassList: React.FC = () => {
       valueType: 'index',
     },
     {
+      title: '年级名称',
+      dataIndex: 'grade_name',
+      tip: '',
+    },
+    {
       title: '班级名称',
       dataIndex: 'name',
       tip: '',
