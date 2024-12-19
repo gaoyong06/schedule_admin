@@ -13,6 +13,7 @@ import {
   batchCreateClass,
 } from '../../../services/api/class';
 import BatchAddModel from './components/BatchAddModel';
+import OperationModal from './components/OperationModal';
 
 /**
  * 添加班级
@@ -101,7 +102,9 @@ const handleBatchDelete = async (selectedRows: API.Class[]) => {
 };
 
 const ClassList: React.FC = () => {
-  const [open, setVisible] = useState<boolean>(false);
+  const [openAdd, setAddModelVisible] = useState<boolean>(false);
+  const [openEdit, setEditModelVisible] = useState<boolean>(false);
+
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<Partial<API.Class> | undefined>(undefined);
   const [selectedRowsState, setSelectedRows] = useState<API.Class[]>([]);
@@ -113,7 +116,8 @@ const ClassList: React.FC = () => {
 
   // 新建,编辑弹窗点击取消按钮
   const handleCancel = () => {
-    setVisible(false);
+    setAddModelVisible(false);
+    setEditModelVisible(false);
     setCurrentRow(undefined);
   };
 
@@ -125,7 +129,7 @@ const ClassList: React.FC = () => {
 
     await handleBatchCreate(values);
     // 关闭弹窗
-    setVisible(false);
+    setAddModelVisible(false);
     // 刷新列表
     actionRef.current?.reload();
   };
@@ -143,7 +147,7 @@ const ClassList: React.FC = () => {
     }
 
     // 关闭弹窗
-    setVisible(false);
+    setEditVisible(false);
     // 刷新列表
     actionRef.current?.reload();
   };
@@ -165,13 +169,13 @@ const ClassList: React.FC = () => {
   // 新建班级弹窗
   const showCreateModal = () => {
     setCurrentRow(undefined);
-    setVisible(true);
+    setAddModelVisible(true);
   };
 
   // 编辑班级弹窗
   const showUpdateModal = (item: API.Class) => {
     setCurrentRow(item);
-    setVisible(true);
+    setEditModelVisible(true);
   };
 
   // 删除班级弹窗(单个,或批量删除)
@@ -267,6 +271,16 @@ const ClassList: React.FC = () => {
               showCreateModal();
             }}
           >
+            <PlusOutlined /> 批量新建
+          </Button>,
+
+          <Button
+            type="primary"
+            key="primary"
+            onClick={() => {
+              showUpdateModal();
+            }}
+          >
             <PlusOutlined /> 新建
           </Button>,
         ]}
@@ -328,10 +342,18 @@ const ClassList: React.FC = () => {
       )}
 
       <BatchAddModel
-        open={open}
+        open={openAdd}
         grades={grades}
         onCancel={handleCancel}
         onSubmit={handleSubmitBatchCreate}
+        currentUser={currentUser}
+      />
+
+      <OperationModal
+        open={openEdit}
+        current={currentRow}
+        onCancel={handleCancel}
+        onSubmit={handleSubmitCreateOrUpdate}
         currentUser={currentUser}
       />
     </PageContainer>
