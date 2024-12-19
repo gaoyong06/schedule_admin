@@ -70,14 +70,14 @@ export async function getTeacherGroupsByOrg(
   params: API.getTeacherGroupsByOrgParams,
   options?: { [key: string]: any },
 ) {
-  const { school_id: param0, ...queryParams } = params;
+  const { org_id: param0, ...queryParams } = params;
   return request<API.Response & { data?: API.PageList & { list?: API.TeacherGroup[] } }>(
     `/api/v1/teacher-groups/org/${param0}`,
     {
       method: 'GET',
       params: {
         // page has a default value: 1
-        page: '1',
+        current: '1',
         // page_size has a default value: 10
         page_size: '10',
         ...queryParams,

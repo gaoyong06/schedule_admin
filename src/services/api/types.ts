@@ -23,7 +23,7 @@ declare namespace API {
   type Class = {
     /** 班级id */
     class_id?: number;
-    eduStage?: EduStage;
+    edu_stage?: EduStage;
     /** 年级id */
     grade_id?: number;
     /** 名称 */
@@ -31,6 +31,15 @@ declare namespace API {
     /** 组织id */
     org_id?: number;
     stage_id?: number;
+  };
+
+  type GradeClassCount = {
+    /** 年级id */
+    grade_id: number;
+    /** 班级名称 */
+    name: string;
+    /** 班级数量 */
+    class_count: number;
   };
 
   type ClassRule = {
@@ -55,6 +64,16 @@ declare namespace API {
     org_id?: number;
     stage_id?: number;
   };
+
+  type BatchCreateClassReq = [
+    {
+      org_id?: number;
+      stage_id?: number;
+      grade_id?: number;
+      grade_name?: string;
+      class_count?: number;
+    },
+  ];
 
   type CreateClassRuleReq = {
     class_id?: number;
@@ -685,6 +704,7 @@ declare namespace API {
   };
 
   type getTeacherGroupsByOrgParams = {
+    org_id: number;
     /** 页码 */
     current: number;
     /** 每页大小 */

@@ -29,6 +29,21 @@ export async function createClass(body: API.CreateClassReq, options?: { [key: st
   });
 }
 
+/** 批量创建班级 创建一个新的班级 POST /api/v1/classes/batch */
+export async function batchCreateClass(
+  body: API.BatchCreateClassReq,
+  options?: { [key: string]: any },
+) {
+  return request<API.Response>('/api/v1/classes/batch', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** 获取班级信息 根据班级ID获取班级信息 GET /api/v1/classes/${param0} */
 export async function getClass(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -110,7 +125,7 @@ export async function getClassesByGrade(
   );
 }
 
-/** 获取组织的年级列表 获取组织的年级列表 GET /api/v1/grades/org/${param0} */
+/** 获取组织的年级列表 获取组织的年级列表 GET /api/v1/classes/org/${param0} */
 export async function getClassesByOrg(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.getClassesByOrgParams,
@@ -118,12 +133,12 @@ export async function getClassesByOrg(
 ) {
   const { org_id: param0, ...queryParams } = params;
   return request<API.Response & { data?: API.PageList & { list?: API.Class[] } }>(
-    `/api/v1/grades/org/${param0}`,
+    `/api/v1/classes/org/${param0}`,
     {
       method: 'GET',
       params: {
         // page has a default value: 1
-        page: '1',
+        current: '1',
         // page_size has a default value: 10
         page_size: '10',
         ...queryParams,

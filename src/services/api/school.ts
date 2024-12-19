@@ -74,7 +74,7 @@ export async function getSchoolsByUser(
       method: 'GET',
       params: {
         // page has a default value: 1
-        page: '1',
+        current: '1',
         // page_size has a default value: 10
         page_size: '10',
         ...queryParams,

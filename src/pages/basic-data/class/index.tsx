@@ -10,8 +10,9 @@ import {
   getClassesByOrg,
   updateClass,
   batchDeleteClasses,
+  batchCreateClass,
 } from '../../../services/api/class';
-import OperationModal from './components/OperationModal';
+import BatchAddModel from './components/BatchAddModel';
 
 /**
  * 添加班级
@@ -23,6 +24,26 @@ const handleCreate = async (fields: API.Class) => {
 
   try {
     await createClass({ ...fields });
+    hide();
+    message.success('添加成功');
+    return true;
+  } catch (error) {
+    hide();
+    message.error('添加失败请重试！');
+    return false;
+  }
+};
+
+/**
+ * 添加班级
+ *
+ * @param fields
+ */
+const handleBatchCreate = async (fields: API.BatchCreateClassReq[]) => {
+  const hide = message.loading('正在添加');
+
+  try {
+    await batchCreateClass(fields);
     hide();
     message.success('添加成功');
     return true;
@@ -94,6 +115,19 @@ const ClassList: React.FC = () => {
   const handleCancel = () => {
     setVisible(false);
     setCurrentRow(undefined);
+  };
+
+  // 表单提交
+  // 批量新建
+  const handleSubmitBatchCreate = async (values: API.BatchCreateClassReq[]) => {
+    console.log('====== handleSubmitBatchCreate =====');
+    console.log(values);
+
+    await handleBatchCreate(values);
+    // 关闭弹窗
+    setVisible(false);
+    // 刷新列表
+    actionRef.current?.reload();
   };
 
   // 表单提交
@@ -200,6 +234,18 @@ const ClassList: React.FC = () => {
     },
   ];
 
+  // 示例数据
+  const grades: API.Grade[] = [
+    {
+      grade_id: 1,
+      name: '一年级',
+    },
+    {
+      grade_id: 2,
+      name: '二年级',
+    },
+  ];
+
   return (
     <PageContainer content="设置课表中涉及的所有班级信息">
       <ProTable<API.Class, API.Pagination>
@@ -276,11 +322,11 @@ const ClassList: React.FC = () => {
         </FooterToolbar>
       )}
 
-      <OperationModal
+      <BatchAddModel
         open={open}
-        current={currentRow}
+        grades={grades}
         onCancel={handleCancel}
-        onSubmit={handleSubmitCreateOrUpdate}
+        onSubmit={handleSubmitBatchCreate}
         currentUser={currentUser}
       />
     </PageContainer>
